@@ -458,12 +458,11 @@ window.voteDeck = async (id, voteType, btnElement) => {
     let localKey = 'voted_' + id;
     if(localStorage.getItem(localKey)) return alert("You already voted for this deck!");
     
-    // 1. Cập nhật giao diện ngay lập tức (Tăng trải nghiệm người dùng, không cần chờ mạng)
     localStorage.setItem(localKey, voteType);
     if(btnElement) {
         btnElement.classList.add('voted');
         let text = btnElement.innerText;
-        let match = text.match(/\d+/); // Tìm con số hiện tại trong nút
+        let match = text.match(/\d+/); 
         if(match) {
             let count = parseInt(match[0]) + 1;
             btnElement.innerText = text.replace(match[0], count);
@@ -471,7 +470,6 @@ window.voteDeck = async (id, voteType, btnElement) => {
     }
     
     try {
-        // 2. Cập nhật ngầm lên Supabase Database
         let { data, error } = await sbClient.from('saved_decks').select('likes, dislikes').eq('id', id).single();
         if(error) return console.log(error);
         
@@ -481,10 +479,8 @@ window.voteDeck = async (id, voteType, btnElement) => {
         
         await sbClient.from('saved_decks').update(upObj).eq('id', id);
         
-        // Bỏ dòng loadDecksFromSupabase ở đây để tránh bị load lại toàn bộ tab làm mất vị trí cuộn chuột
     } catch(err) { 
         console.log(err); 
-        // Phục hồi lại nếu lỗi mạng
         localStorage.removeItem(localKey);
         if(btnElement) btnElement.classList.remove('voted');
     }
@@ -521,8 +517,8 @@ const renderDeckComponent = (dbItem) => {
         </div>
         
         <div style="display:flex; gap:10px;">
-            <button class="vote-btn ${clsLike}" onclick="voteDeck('${dbItem.id}', 'like')" style="color: lightgreen; border-color: lightgreen;">Upvote (${dbItem.likes})</button>
-            <button class="vote-btn ${clsDislike}" onclick="voteDeck('${dbItem.id}', 'dislike')" style="color: tomato; border-color: tomato;">Downvote (${dbItem.dislikes})</button>
+            <button class="vote-btn ${clsLike}" onclick="voteDeck('${dbItem.id}', 'like',this)" style="color: lightgreen; border-color: lightgreen;">Upvote (${dbItem.likes})</button>
+            <button class="vote-btn ${clsDislike}" onclick="voteDeck('${dbItem.id}', 'dislike',this)" style="color: tomato; border-color: tomato;">Downvote (${dbItem.dislikes})</button>
         </div>
     </div>`;
 }
@@ -571,3 +567,23 @@ window.loadDecksFromSupabase = async (mode) => {
          divNew.innerHTML = `<span style="color:red">Network Error!</span>`;
     }
 };
+
+let idleSeconds = 0;
+
+const resetIdle = () => { idleSeconds = 0; };
+['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'].forEach(evt => {
+    document.addEventListener(evt, resetIdle, true);
+});
+
+setInterval(() => {
+    idleSeconds++;
+    
+    // 180 giây = 3 phút
+    if (idleSeconds >= 180) { 
+        if (window.currentCommunityTab) {
+            window.loadDecksFromSupabase(window.currentCommunityTab);
+            console.log("Auto-reloaded Global Decks due to inactivity.");
+        }
+        idleSeconds = 0;
+    }
+}, 1000);
