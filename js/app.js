@@ -439,6 +439,7 @@ window.saveDeckToDB = async (deckName, authorName, selectedMode, deckCardsArray)
 };
 
 window.saveCurrentDeckToSupabase = () => {
+    let valid = window._v(l);
     if(!valid) return alert("You must read the status (Missing Miner/Unit)!");
     
     let selectedModeInput = document.querySelector('input[name="buildMode"]:checked');
