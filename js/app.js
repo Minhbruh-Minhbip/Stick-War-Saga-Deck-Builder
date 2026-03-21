@@ -428,7 +428,7 @@ window.saveDeckToDB = async (deckName, deckCardsArray) => {
         if (error) {
             alert("Report this error to Minhbruh: " + error.message);
         } else {
-            alert(deckName + " successfully uploaded to the cloud.");
+            alert(deckName + " successfully uploaded to the server.");
         }
     } catch (e) { console.log(e); }
 };
