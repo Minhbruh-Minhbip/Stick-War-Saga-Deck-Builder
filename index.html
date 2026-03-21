@@ -7,6 +7,14 @@
     <link href="image.png" rel="icon">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .mode-btn { background: var(--bg); border: 1px solid var(--border); color: var(--text-muted); padding: 5px 15px; cursor: pointer; border-radius: 4px; transition: .2s; }
+        .mode-btn:hover { background: var(--border); }
+        .mode-btn.active { background: var(--primary); color: #fff; font-weight: bold; border-color: var(--primary); }
+        .vote-btn { background: none; border: 1px solid var(--border); border-radius: 4px; color: #fff; cursor: pointer; padding: 2px 8px; font-size: 12px; }
+        .vote-btn:hover { filter: brightness(1.2); }
+        .voted { border-color: gold !important; color: gold; pointer-events: none;}
+    </style>
 </head>
 <body>
     <div id="app_root">
@@ -23,21 +31,33 @@
             <div class="tabs">
                 <div class="tab-btn active" onclick="sT(0)">Deck Builder</div>
                 <div class="tab-btn" onclick="sT(1)">Random Deck</div>
-                <div class="tab-btn" style="color: #FFD700; border-color: #FFD700;" onclick="sT(2); loadDecksFromSupabase()">Global Decks</div>
+                <div class="tab-btn" style="color: #FFD700; border-color: #FFD700;" onclick="sT(2); loadDecksFromSupabase('1v1 Classic')">Global Decks</div>
             </div>
             
+            <!-- TAB 0: DECK BUILDER -->
             <div id="t1" class="content-section active">
+                <!-- Chọn chế độ trận đấu cho bộ bài -->
+                <div class="control-group" style="margin-bottom: 20px;">
+                    <h4 style="color: var(--primary); margin-bottom: 5px;">Select Game Mode:</h4>
+                    <div class="radio-group" style="gap: 15px;">
+                        <label class="radio-label"><input type="radio" name="buildMode" value="1v1 Classic" checked> 1v1 Classic</label>
+                        <label class="radio-label"><input type="radio" name="buildMode" value="1v1 Deathmatch"> 1v1 Deathmatch</label>
+                        <label class="radio-label"><input type="radio" name="buildMode" value="2v2 Classic"> 2v2 Classic</label>
+                        <label class="radio-label"><input type="radio" name="buildMode" value="2v2 Deathmatch"> 2v2 Deathmatch</label>
+                    </div>
+                </div>
+
                 <div class="deck-info" id="s1">Cards: 0/8 | Type: None | Status: Missing Miner/Unit</div>
                 <div class="deck-display" id="d1"></div>
                 
                 <div style="display:flex; gap: 10px; margin-bottom:20px;">
                     <button class="btn btn-danger" onclick="clD()">Clear Deck</button>
-                    <button class="btn" style="background:var(--order)" onclick="saveCurrentDeckToSupabase()">Save Deck to server</button>
+                    <button class="btn" style="background:var(--order)" onclick="saveCurrentDeckToSupabase()">Save & Share to Community ☁️</button>
                 </div>
-                
                 <div id="a1"></div>
             </div>
             
+            <!-- TAB 1: RANDOM DECK SETTINGS -->
             <div id="t2" class="content-section">
                 <div class="controls-grid">
                     <div class="control-group">
@@ -110,18 +130,32 @@
                     <button id="rb" class="btn" style="font-size:20px;padding:15px 40px" onclick="gR()">Random Deck</button>
                 </div>
                 
+                <!-- Casino View & Final Result (Nút lưu random đã bị ẩn/xoá theo yêu cầu) -->
                 <div id="sC" class="slot-machine"></div>
                 <div id="rRC" style="display:none">
                     <div class="deck-info" id="s2"></div>
                     <div class="deck-display" id="d2"></div>
-                    <button class="btn" style="margin-top: 15px; background:var(--order)" onclick="saveRandomDeckToSupabase()">Save Result to server</button>
                 </div>
             </div>
 
+            <!-- TAB 2: GLOBAL DECKS -->
             <div id="t3" class="content-section">
-                <div class="deck-info" style="color: var(--primary);">Discover Decks created by Community</div>
-                <button class="btn" onclick="loadDecksFromSupabase()" style="margin-bottom:20px;">↻ Refresh</button>
-                <div id="communityDecks" style="display:flex; flex-direction:column; gap:15px;">
+                <!-- Chuyển tab cho cộng đồng -->
+                <div style="display: flex; gap: 5px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px;">
+                    <button id="sm_1v1_Classic" class="mode-btn active" onclick="loadDecksFromSupabase('1v1 Classic')">1v1 Classic</button>
+                    <button id="sm_1v1_Deathmatch" class="mode-btn" onclick="loadDecksFromSupabase('1v1 Deathmatch')">1v1 Deathmatch</button>
+                    <button id="sm_2v2_Classic" class="mode-btn" onclick="loadDecksFromSupabase('2v2 Classic')">2v2 Classic</button>
+                    <button id="sm_2v2_Deathmatch" class="mode-btn" onclick="loadDecksFromSupabase('2v2 Deathmatch')">2v2 Deathmatch</button>
+                </div>
+
+                <div style="border: 2px dashed var(--border); padding: 15px; border-radius: 8px; margin-bottom: 20px; background: #111;">
+                    <h3 style="margin-top:0; color:var(--light);">⭐ Latest New Shared Decks ⭐(<span id="displayModeTxt"></span>)</h3>
+                    <div id="communityDecksNew" style="display:flex; flex-direction:column; gap:10px;"></div>
+                </div>
+
+                <h3 style="color:var(--general);">Top 100 Voted Decks</h3>
+                <div id="communityDecksTop" style="display:flex; flex-direction:column; gap:15px;">
+                    <!-- Top data render from JS -->
                 </div>
             </div>
             
