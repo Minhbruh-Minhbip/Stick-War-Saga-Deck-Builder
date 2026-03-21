@@ -19,37 +19,115 @@
                     </small>
                 </div>
             </div>
-
+            
             <div class="tabs">
                 <div class="tab-btn active" onclick="sT(0)">Deck Builder</div>
                 <div class="tab-btn" onclick="sT(1)">Random Deck</div>
-                <div class="tab-btn" onclick="loadDecksFromSupabase()">Community Decks</div>
+                <div class="tab-btn" style="color: #FFD700; border-color: #FFD700;" onclick="sT(2); loadDecksFromSupabase()">Global Decks</div>
             </div>
+            
             <div id="t1" class="content-section active">
                 <div class="deck-info" id="s1">Cards: 0/8 | Type: None | Status: Missing Miner/Unit</div>
                 <div class="deck-display" id="d1"></div>
-                <button class="btn btn-danger" onclick="clD()" style="margin-bottom:20px">Clear Deck</button>
-                <button class="btn" onclick="saveCurrentDeckToSupabase()" style="margin-bottom:20px; background:var(--order)">Save to Supabase</button>
+                
+                <div style="display:flex; gap: 10px; margin-bottom:20px;">
+                    <button class="btn btn-danger" onclick="clD()">Clear Deck</button>
+                    <button class="btn" style="background:var(--order)" onclick="saveCurrentDeckToSupabase()">Save Deck to Supabase ☁️</button>
+                </div>
+                
                 <div id="a1"></div>
             </div>
+            
             <div id="t2" class="content-section">
                 <div class="controls-grid">
+                    <div class="control-group">
+                        <h4>Miner Options (Req) <button class="btn" style="padding:4px 8px;font-size:10px;float:right" onclick="rndC()">Randomize Config</button></h4>
+                        <div class="radio-group">
+                            <label class="radio-label"><input type="radio" name="rm" value="Order Miner" onchange="uS('m','Order Miner')"> Order Miner</label>
+                            <label class="radio-label"><input type="radio" name="rm" value="Enslaved Miner" onchange="uS('m','Enslaved Miner')"> Enslaved Miner</label>
+                            <label class="radio-label"><input type="radio" name="rm" value="Random" checked onchange="uS('m','Random')"> Random</label>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <h4>Unit Options</h4>
+                        <div class="radio-group">
+                            <label class="radio-label"><input type="radio" name="ru" value="All" checked onchange="uS('uM','All')"> Random All</label>
+                            <label class="radio-label"><input type="radio" name="ru" value="Cust" onchange="uS('uM','Cust')"> Customize</label>
+                        </div>
+                        <div id="uAC">
+                            <div class="slider-container">
+                                <label>Units (<span id="lvUA">1</span>):</label>
+                                <input type="range" id="slUA" min="1" max="7" value="1" oninput="uV('uA',this.value)">
+                            </div>
+                        </div>
+                        <div id="uCC" style="display:none">
+                            <div class="slider-container">
+                                <label>Normal (<span id="lvUN">1</span>):</label>
+                                <input type="range" id="slUN" min="0" max="7" value="1" oninput="uV('uN',this.value)">
+                            </div>
+                            <div class="slider-container">
+                                <label>General (<span id="lvUG">0</span>):</label>
+                                <input type="range" id="slUG" min="0" max="7" value="0" oninput="uV('uG',this.value)">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <h4>Spells & Enchants</h4>
+                        <div class="slider-container">
+                            <label>Enchant (<span id="lvEA">0</span>):</label>
+                            <input type="range" id="slEA" min="0" max="6" value="0" oninput="uV('eA',this.value)">
+                        </div>
+                        <div class="slider-container">
+                            <label>Spell (<span id="lvSA">0</span>):</label>
+                            <input type="range" id="slSA" min="0" max="6" value="0" oninput="uV('sA',this.value)">
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <h4>Mythic</h4>
+                        <div class="slider-container">
+                            <label>Mythic (<span id="lvMA">1</span>):</label>
+                            <input type="range" id="slMA" min="0" max="1" value="1" oninput="uV('mA',this.value)">
+                        </div>
+                        <small id="mzW" style="color:var(--primary);display:none">Grasp of Zilaros allows max 2.</small>
+                    </div>
+                </div>
+                
+                <div class="ban-spec-grid">
+                    <div class="control-group">
+                        <h4>Ban Cards <button class="btn btn-danger" style="padding:4px 8px;font-size:10px;float:right" onclick="cB()">Clear</button></h4>
+                        <div id="aB"></div>
+                    </div>
+                    <div class="control-group">
+                        <h4>Specified Cards <button class="btn btn-danger" style="padding:4px 8px;font-size:10px;float:right" onclick="cS()">Clear</button></h4>
+                        <div id="aS"></div>
+                    </div>
+                </div>
+                
+                <div style="text-align:center;margin:30px 0">
                     <button id="rb" class="btn" style="font-size:20px;padding:15px 40px" onclick="gR()">Random Deck</button>
                 </div>
+                
                 <div id="sC" class="slot-machine"></div>
                 <div id="rRC" style="display:none">
                     <div class="deck-info" id="s2"></div>
                     <div class="deck-display" id="d2"></div>
+                    <button class="btn" style="margin-top: 15px; background:var(--order)" onclick="saveRandomDeckToSupabase()">Save Result to Supabase</button>
                 </div>
             </div>
+
             <div id="t3" class="content-section">
-                <h3 style="color:var(--primary)">Saved Decks from Backend</h3>
-                <div id="community-decks-container">Đang tải từ DB...</div>
+                <div class="deck-info" style="color: var(--primary);">Discover Decks created by Community</div>
+                <button class="btn" onclick="loadDecksFromSupabase()" style="margin-bottom:20px;">↻ Refresh</button>
+                <div id="communityDecks" style="display:flex; flex-direction:column; gap:15px;">
+                </div>
             </div>
+            
         </div>
     </div>
-    <script src="js/data.js"></script>
-    <script src="js/supabase.js"></script>
+
     <script src="js/app.js"></script>
 </body>
 </html>
