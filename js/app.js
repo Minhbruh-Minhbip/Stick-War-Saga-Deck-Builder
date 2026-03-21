@@ -440,7 +440,7 @@ window.saveDeckToDB = async (deckName, authorName, selectedMode, deckCardsArray)
 
 window.saveCurrentDeckToSupabase = () => {
     let valid = window._v(l);
-    if(!valid) return alert("You must read the status (Missing Miner/Unit)!");
+    if(!valid) return alert("You must read the status!");
     
     let selectedModeInput = document.querySelector('input[name="buildMode"]:checked');
     if(!selectedModeInput) return alert("Please select a Game Mode first.");
@@ -505,8 +505,8 @@ const renderDeckComponent = (dbItem) => {
         </div>
         
         <div style="display:flex; gap:10px;">
-            <button class="vote-btn ${clsLike}" onclick="voteDeck('${dbItem.id}', 'like')" style="color: lightgreen; border-color: lightgreen;">▲ Upvote (${dbItem.likes})</button>
-            <button class="vote-btn ${clsDislike}" onclick="voteDeck('${dbItem.id}', 'dislike')" style="color: tomato; border-color: tomato;">▼ Downvote (${dbItem.dislikes})</button>
+            <button class="vote-btn ${clsLike}" onclick="voteDeck('${dbItem.id}', 'like')" style="color: lightgreen; border-color: lightgreen;">Upvote (${dbItem.likes})</button>
+            <button class="vote-btn ${clsDislike}" onclick="voteDeck('${dbItem.id}', 'dislike')" style="color: tomato; border-color: tomato;">Downvote (${dbItem.dislikes})</button>
         </div>
     </div>`;
 }
