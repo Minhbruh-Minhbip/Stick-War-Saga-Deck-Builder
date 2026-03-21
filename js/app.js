@@ -91,6 +91,7 @@ let o = ["Control Whip"];
 let i = []; 
 let c = { m: "Random", uM: "All", uA: 1, uN: 1, uG: 0, eA: 0, mA: 1, sA: 0 }; 
 let s = 0;
+let currentCommunityTab = "1v1 Classic";
 
 window.g = (e) => "Cards/" + e.toLowerCase().replace(/ /g,"_").replace(/'/g,"%27") + ".png";
 window.v = (e) => e==="Miner" ? "var(--miner)" : e==="Normal Unit" ? "var(--normal)" : e==="Spell" ? "var(--spell)" : e==="Enchantment" ? "var(--enchant)" : e==="General" ? "var(--general)" : e==="Mythic" ? "var(--mythic)" : "";
@@ -416,68 +417,144 @@ const SUPABASE_URL = 'https://cnsucvcbvtxocdfjrwcu.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuc3VjdmNidnR4b2NkZmpyd2N1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwNzg1ODQsImV4cCI6MjA4OTY1NDU4NH0.VnksvBK92QTq_gt_QJu4NvsCLYLErXZypaEo82rHxnc';
 const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-window.saveDeckToDB = async (deckName, deckCardsArray) => {
+window.saveDeckToDB = async (deckName, authorName, selectedMode, deckCardsArray) => {
     try {
         let tp = window._t(deckCardsArray);
         const { error } = await sbClient.from('saved_decks').insert([{ 
             deck_name: deckName, 
             deck_type: tp,
-            cards: deckCardsArray.map(card => card.n)
+            cards: deckCardsArray.map(card => card.n),
+            author: authorName,
+            game_mode: selectedMode,
+            likes: 0,
+            dislikes: 0
         }]);
 
         if (error) {
             alert("Report this error to Minhbruh: " + error.message);
         } else {
-            alert(deckName + " successfully uploaded to the server.");
+            alert("Success! '" + deckName + "' by " + authorName + " uploaded for " + selectedMode + " mode.");
         }
     } catch (e) { console.log(e); }
 };
 
 window.saveCurrentDeckToSupabase = () => {
-    if(l.length > 2) return alert("Deck must have 2 or above cards");
-    let valid = window._v(l);
-    if(!valid) return alert("You must read the status");
+    if(!valid) return alert("You must read the status (Missing Miner/Unit)!");
+    
+    let selectedModeInput = document.querySelector('input[name="buildMode"]:checked');
+    if(!selectedModeInput) return alert("Please select a Game Mode first.");
+    
     let name = prompt("Name your deck:");
-    if(name && name.trim() !== "") window.saveDeckToDB(name, l);
+    if(!name || name.trim() === "") return;
+    
+    let author = prompt("Who are you? (Author):");
+    if(!author || author.trim() === "") author = "Anonymous";
+    
+    window.saveDeckToDB(name, author, selectedModeInput.value, l);
 };
 
-window.saveRandomDeckToSupabase = () => {
-    if(!r_random_deck || r_random_deck.length < 1) return alert("Nuh uh");
-    let name = prompt("Name your deck:");
-    if(name && name.trim() !== "") window.saveDeckToDB(name, r_random_deck);
+
+window.voteDeck = async (id, voteType) => {
+    let localKey = 'voted_' + id;
+    if(localStorage.getItem(localKey)) return alert("You already voted for this deck!");
+    
+    try {
+        let { data, error } = await sbClient.from('saved_decks').select('likes, dislikes').eq('id', id).single();
+        if(error) return console.log(error);
+        
+        let upObj = {};
+        if (voteType === 'like') upObj.likes = data.likes + 1;
+        if (voteType === 'dislike') upObj.dislikes = data.dislikes + 1;
+        
+        await sbClient.from('saved_decks').update(upObj).eq('id', id);
+        localStorage.setItem(localKey, voteType);
+        
+        window.loadDecksFromSupabase(currentCommunityTab);
+    } catch(err) { console.log(err); }
+};
+
+const renderDeckComponent = (dbItem) => {
+    let score = dbItem.likes - dbItem.dislikes;
+    let localVote = localStorage.getItem('voted_' + dbItem.id);
+    let clsLike = localVote === 'like' ? 'voted' : '';
+    let clsDislike = localVote === 'dislike' ? 'voted' : '';
+    
+    let d = new Date(dbItem.created_at);
+    let dateStr = ("0" + d.getDate()).slice(-2) + "/" + ("0" + (d.getMonth() + 1)).slice(-2);
+    
+    return `
+    <div style="background:var(--bg-panel); border:1px solid var(--border); padding:15px; border-radius:12px;">
+        <h3 style="margin: 0 0 5px 0; display:flex; justify-content:space-between; align-items:center">
+            <span>
+                <span style="color:#fff">${dbItem.deck_name}</span> 
+                <span style="font-size:12px; color:var(--text-muted); margin-left:8px;">by <span style="color:#58a6ff">${dbItem.author}</span></span>
+            </span>
+            <span class="tag" style="background:${window.k(dbItem.deck_type==='Order' ? 'Order' : dbItem.deck_type==='Chaos' ? 'Chaos' : 'General')}">${dbItem.deck_type}</span>
+        </h3>
+        
+        <div style="margin-bottom: 10px; font-size:11px; color:gray">Added: ${dateStr} | Score: <strong style="color:${score < 0 ? 'red' : 'lightgreen'}">${score}</strong></div>
+        
+        <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:12px;">
+            ${dbItem.cards.map(cName => {
+                let objCard = n.find(x => x.n === cName);
+                if(objCard) {
+                     return window._m(objCard, "nullFunction", false).replace('onclick="nullFunction(\''+objCard.n.replace(/'/g,"\\'")+'\')"','style="cursor:default;"');
+                } else return `<span style="font-size:12px;color:gray">${cName}</span>`;
+            }).join("")}
+        </div>
+        
+        <div style="display:flex; gap:10px;">
+            <button class="vote-btn ${clsLike}" onclick="voteDeck('${dbItem.id}', 'like')" style="color: lightgreen; border-color: lightgreen;">▲ Upvote (${dbItem.likes})</button>
+            <button class="vote-btn ${clsDislike}" onclick="voteDeck('${dbItem.id}', 'dislike')" style="color: tomato; border-color: tomato;">▼ Downvote (${dbItem.dislikes})</button>
+        </div>
+    </div>`;
 }
 
-window.loadDecksFromSupabase = async () => {
-    let container = document.getElementById("communityDecks");
-    container.innerHTML = `<span style="color:#fff">Connecting to server...</span>`;
+window.loadDecksFromSupabase = async (mode) => {
+    if(!mode) mode = currentCommunityTab;
+    currentCommunityTab = mode;
+    
+    // UI tabs update
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.innerText === mode);
+    });
+    document.getElementById("displayModeTxt").innerText = mode;
+
+    let divNew = document.getElementById("communityDecksNew");
+    let divTop = document.getElementById("communityDecksTop");
+    
+    divNew.innerHTML = `<span style="color:gray">Loading new...</span>`;
+    divTop.innerHTML = `<span style="color:gray">Loading Top...</span>`;
+    
     try {
-        const { data, error } = await sbClient.from('saved_decks')
-                                        .select('*').order('created_at', { ascending: false }).limit(10);
+        // Lay toan bo DB thuoc mode nay vi phai xu ly diem Score (likes - dislikes) thu cong
+        const { data, error } = await sbClient.from('saved_decks').select('*').eq('game_mode', mode);
+        
         if(error) {
-            container.innerHTML = `<span style="color:red">Bug found or Backend didn't create. <br>Error: ${error.message}</span>`;
-            return;
+            divNew.innerHTML = `<span style="color:red">Server error.</span>`;
+            divTop.innerHTML = ""; return;
         }
         
-        let htmlDecks = data.map(db => `
-            <div style="background:var(--bg-panel); border:1px solid var(--border); padding:15px; border-radius:12px;">
-                <h3 style="margin: 0 0 10px 0; display:flex; justify-content:space-between;">
-                    <span style="color:#fff">${db.deck_name}</span> 
-                    <span class="tag" style="background:${window.k(db.deck_type==='Order' ? 'Order' : db.deck_type==='Chaos' ? 'Chaos' : 'General')}">${db.deck_type}</span>
-                </h3>
-                <div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:10px;">
-                    ${db.cards.map(cName => {
-                        let objCard = n.find(x => x.n === cName);
-                        if(objCard) {
-                             // Render ra mấy mini-card bé xíu tuyệt đẹp như code ban đầu của bạn
-                             return window._m(objCard, "nullFunction", false).replace('onclick="nullFunction(\''+objCard.n.replace(/'/g,"\\'")+'\')"','style="cursor:default;"');
-                        } else return `<span style="font-size:12px;color:gray">${cName}</span>`;
-                    }).join("")}
-                </div>
-            </div>
-        `).join("");
+        if(data.length === 0) {
+            divNew.innerHTML = `<span style="color:gray">No one shared a deck for this mode yet!</span>`;
+            divTop.innerHTML = ``; return;
+        }
+
+        // Sap xep cho Tab New (Gần nhat 5 cai)
+        let listNew = [...data].sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 5);
+        divNew.innerHTML = listNew.map(d => renderDeckComponent(d)).join("");
         
-        container.innerHTML = data.length > 0 ? htmlDecks : `<span style="color:gray">Well.. There is no one share their deck. You should be the first one!</span>`;
+        // Sap xep Top 100 theo score (Like - Dislike) -> Then break-tie using likes
+        let listTop = [...data].sort((a, b) => {
+            let scoreA = a.likes - a.dislikes;
+            let scoreB = b.likes - b.dislikes;
+            if(scoreA === scoreB) return b.likes - a.likes;
+            return scoreB - scoreA;
+        }).slice(0, 100);
+        
+        divTop.innerHTML = listTop.map(d => renderDeckComponent(d)).join("");
+        
     } catch(err) {
-         container.innerHTML = `<span style="color:red">Fetch bug! Check your connection</span>`;
+         divNew.innerHTML = `<span style="color:red">Network Error!</span>`;
     }
 };
