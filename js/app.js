@@ -520,9 +520,8 @@ const renderDeckComponent = (dbItem) => {
             
             // Render ảnh vào khối lưới
             deckImagesHTML += `
-                <div style="aspect-ratio: 3/4; overflow: hidden; background: #111; display:flex; align-items:center; justify-content:center;">
-                    <img src="${window.g(objCard.n)}" onerror="this.style.display='none'" style="width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.95);">
-                </div>`;
+                <div style="width:64px; height:64px; overflow:hidden; background:#111; display:flex; align-items:center; justify-content:center;">
+        <img src="${window.g(objCard.n)}" onerror="this.style.display='none'" style="width:100%; height:100%; object-fit:cover; display:block; filter:brightness(0.95);"></div>`;
         } else {
             miniCardsHTML += `<span style="font-size:12px;color:gray">${cName}</span>`;
         }
@@ -540,17 +539,14 @@ const renderDeckComponent = (dbItem) => {
         
         <div style="margin-bottom: 10px; font-size:11px; color:gray">Added: ${dateStr} | Score: <strong style="color:${score < 0 ? 'red' : 'lightgreen'}">${score}</strong></div>
         
-        <!-- Danh sách Tên Card -->
         <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:8px;">
             ${miniCardsHTML}
         </div>
         
-        <!-- Bức ảnh thống nhất ghép từ các Card (4x2 Grid) -->
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: #222; padding: 2px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,64px);gap:4px;background:#222;padding:4px;border-radius:8px;border:1px solid var(--border);margin-bottom:12px;">
             ${deckImagesHTML}
         </div>
         
-        <!-- Nút Vote -->
         <div style="display:flex; gap:10px;">
             <button class="vote-btn ${clsLike}" onclick="voteDeck('${dbItem.id}', 'like',this)" style="color: lightgreen; border-color: lightgreen;">Upvote (${dbItem.likes})</button>
             <button class="vote-btn ${clsDislike}" onclick="voteDeck('${dbItem.id}', 'dislike',this)" style="color: tomato; border-color: tomato;">Downvote (${dbItem.dislikes})</button>
