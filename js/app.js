@@ -507,8 +507,29 @@ const renderDeckComponent = (dbItem) => {
     let d = new Date(dbItem.created_at);
     let dateStr = ("0" + d.getDate()).slice(-2) + "/" + ("0" + (d.getMonth() + 1)).slice(-2);
     
+    // Tách riêng mảng HTML cho Mini-cards (tên) và Images (ảnh ghép)
+    let miniCardsHTML = "";
+    let deckImagesHTML = "";
+    
+    dbItem.cards.forEach(cName => {
+        let objCard = n.find(x => x.n === cName);
+        if(objCard) {
+            // Render thẻ tên (mini card)
+            miniCardsHTML += window._m(objCard, "nullFunction", false)
+                .replace('onclick="nullFunction(\''+objCard.n.replace(/'/g,"\\'")+'\')"','style="cursor:default;"');
+            
+            // Render ảnh vào khối lưới
+            deckImagesHTML += `
+                <div style="aspect-ratio: 3/4; overflow: hidden; background: #111; display:flex; align-items:center; justify-content:center;">
+                    <img src="${window.g(objCard.n)}" onerror="this.style.display='none'" style="width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.95);">
+                </div>`;
+        } else {
+            miniCardsHTML += `<span style="font-size:12px;color:gray">${cName}</span>`;
+        }
+    });
+    
     return `
-    <div style="background:var(--bg-panel); border:1px solid var(--border); padding:15px; border-radius:12px;">
+    <div style="background:var(--bg-panel); border:1px solid var(--border); padding:15px; border-radius:12px; margin-bottom: 12px;">
         <h3 style="margin: 0 0 5px 0; display:flex; justify-content:space-between; align-items:center">
             <span>
                 <span style="color:#fff">${dbItem.deck_name}</span> 
@@ -519,15 +540,17 @@ const renderDeckComponent = (dbItem) => {
         
         <div style="margin-bottom: 10px; font-size:11px; color:gray">Added: ${dateStr} | Score: <strong style="color:${score < 0 ? 'red' : 'lightgreen'}">${score}</strong></div>
         
-        <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:12px;">
-            ${dbItem.cards.map(cName => {
-                let objCard = n.find(x => x.n === cName);
-                if(objCard) {
-                     return window._m(objCard, "nullFunction", false).replace('onclick="nullFunction(\''+objCard.n.replace(/'/g,"\\'")+'\')"','style="cursor:default;"');
-                } else return `<span style="font-size:12px;color:gray">${cName}</span>`;
-            }).join("")}
+        <!-- Danh sách Tên Card -->
+        <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:8px;">
+            ${miniCardsHTML}
         </div>
         
+        <!-- Bức ảnh thống nhất ghép từ các Card (4x2 Grid) -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: #222; padding: 2px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+            ${deckImagesHTML}
+        </div>
+        
+        <!-- Nút Vote -->
         <div style="display:flex; gap:10px;">
             <button class="vote-btn ${clsLike}" onclick="voteDeck('${dbItem.id}', 'like',this)" style="color: lightgreen; border-color: lightgreen;">Upvote (${dbItem.likes})</button>
             <button class="vote-btn ${clsDislike}" onclick="voteDeck('${dbItem.id}', 'dislike',this)" style="color: tomato; border-color: tomato;">Downvote (${dbItem.dislikes})</button>
