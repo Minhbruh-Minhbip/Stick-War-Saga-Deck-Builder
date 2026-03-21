@@ -476,7 +476,7 @@ window.loadDecksFromSupabase = async () => {
             </div>
         `).join("");
         
-        container.innerHTML = data.length > 0 ? htmlDecks : `<span style="color:gray">Well.. There is no one share their deck. You are the first one!</span>`;
+        container.innerHTML = data.length > 0 ? htmlDecks : `<span style="color:gray">Well.. There is no one share their deck. You should be the first one!</span>`;
     } catch(err) {
          container.innerHTML = `<span style="color:red">Fetch bug! Check your connection</span>`;
     }
