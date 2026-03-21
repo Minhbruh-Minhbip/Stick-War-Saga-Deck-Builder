@@ -514,7 +514,6 @@ window.loadDecksFromSupabase = async (mode) => {
     if(!mode) mode = currentCommunityTab;
     currentCommunityTab = mode;
     
-    // UI tabs update
     document.querySelectorAll('.mode-btn').forEach(btn => {
         btn.classList.toggle('active', btn.innerText === mode);
     });
@@ -524,10 +523,9 @@ window.loadDecksFromSupabase = async (mode) => {
     let divTop = document.getElementById("communityDecksTop");
     
     divNew.innerHTML = `<span style="color:gray">Loading new...</span>`;
-    divTop.innerHTML = `<span style="color:gray">Loading Top...</span>`;
+    divTop.innerHTML = `<span style="color:gray">Loading leaderboard...</span>`;
     
     try {
-        // Lay toan bo DB thuoc mode nay vi phai xu ly diem Score (likes - dislikes) thu cong
         const { data, error } = await sbClient.from('saved_decks').select('*').eq('game_mode', mode);
         
         if(error) {
@@ -540,11 +538,9 @@ window.loadDecksFromSupabase = async (mode) => {
             divTop.innerHTML = ``; return;
         }
 
-        // Sap xep cho Tab New (Gần nhat 5 cai)
         let listNew = [...data].sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 5);
         divNew.innerHTML = listNew.map(d => renderDeckComponent(d)).join("");
         
-        // Sap xep Top 100 theo score (Like - Dislike) -> Then break-tie using likes
         let listTop = [...data].sort((a, b) => {
             let scoreA = a.likes - a.dislikes;
             let scoreB = b.likes - b.dislikes;
