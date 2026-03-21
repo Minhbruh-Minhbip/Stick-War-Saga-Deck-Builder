@@ -6,7 +6,6 @@
     <title>Stick War: Saga Deck Builder</title>
     <link href="image.png" rel="icon">
     <link rel="stylesheet" href="style.css">
-    <!-- Nạp Supabase JS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -24,10 +23,8 @@
             <div class="tabs">
                 <div class="tab-btn active" onclick="sT(0)">Deck Builder</div>
                 <div class="tab-btn" onclick="sT(1)">Random Deck</div>
-                <div class="tab-btn" onclick="loadDecksFromSupabase()">Community Decks</div> <!-- Tích hợp tab Supabase mới -->
+                <div class="tab-btn" onclick="loadDecksFromSupabase()">Community Decks</div>
             </div>
-
-            <!-- TAB 1: DECK BUILDER -->
             <div id="t1" class="content-section active">
                 <div class="deck-info" id="s1">Cards: 0/8 | Type: None | Status: Missing Miner/Unit</div>
                 <div class="deck-display" id="d1"></div>
@@ -35,13 +32,8 @@
                 <button class="btn" onclick="saveCurrentDeckToSupabase()" style="margin-bottom:20px; background:var(--order)">Save to Supabase</button>
                 <div id="a1"></div>
             </div>
-
-            <!-- TAB 2: RANDOM DECK -->
             <div id="t2" class="content-section">
-                <!-- Nội dung UI Control Grid nguyên bản của bạn -->
                 <div class="controls-grid">
-                    <!-- Controls ... (Code bóc tách giữ nguyên HTML cấu trúc lưới như file cũ) -->
-                    <!-- Lưu ý: Xem hướng dẫn gộp logic trong app.js bên dưới -->
                     <button id="rb" class="btn" style="font-size:20px;padding:15px 40px" onclick="gR()">Random Deck</button>
                 </div>
                 <div id="sC" class="slot-machine"></div>
@@ -50,16 +42,12 @@
                     <div class="deck-display" id="d2"></div>
                 </div>
             </div>
-            
-            <!-- TAB 3: SUPABASE COMMUNITY (TAB MỚI) -->
             <div id="t3" class="content-section">
                 <h3 style="color:var(--primary)">Saved Decks from Backend</h3>
                 <div id="community-decks-container">Đang tải từ DB...</div>
             </div>
         </div>
     </div>
-
-    <!-- Scripts -->
     <script src="js/data.js"></script>
     <script src="js/supabase.js"></script>
     <script src="js/app.js"></script>
