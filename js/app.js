@@ -516,11 +516,11 @@ const renderDeckComponent = (dbItem) => {
                 .replace('onclick="nullFunction(\''+objCard.n.replace(/'/g,"\\'")+'\')"','style="cursor:default;"');
             
             deckImagesHTML += `
-<div style="width:16px;height:16px;overflow:hidden;background:#111;">
-    <img src="${window.g(objCard.n)}"
-         onerror="this.style.display='none'"
-         style="width:100%;height:100%;object-fit:cover;">
-</div>`;
+    <div style="width:64px; height:64px; overflow:hidden; background:#111; display:flex; align-items:center; justify-content:center;">
+        <img src="${window.g(objCard.n)}" 
+             onerror="this.style.display='none'" 
+             style="width:100%; height:100%; object-fit:cover; display:block; filter:brightness(0.95);">
+    </div>`;
         } else {
             miniCardsHTML += `<span style="font-size:12px;color:gray">${cName}</span>`;
         }
