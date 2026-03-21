@@ -454,12 +454,24 @@ window.saveCurrentDeckToSupabase = () => {
     window.saveDeckToDB(name, author, selectedModeInput.value, l);
 };
 
-
-window.voteDeck = async (id, voteType) => {
+window.voteDeck = async (id, voteType, btnElement) => {
     let localKey = 'voted_' + id;
     if(localStorage.getItem(localKey)) return alert("You already voted for this deck!");
     
+    // 1. Cập nhật giao diện ngay lập tức (Tăng trải nghiệm người dùng, không cần chờ mạng)
+    localStorage.setItem(localKey, voteType);
+    if(btnElement) {
+        btnElement.classList.add('voted');
+        let text = btnElement.innerText;
+        let match = text.match(/\d+/); // Tìm con số hiện tại trong nút
+        if(match) {
+            let count = parseInt(match[0]) + 1;
+            btnElement.innerText = text.replace(match[0], count);
+        }
+    }
+    
     try {
+        // 2. Cập nhật ngầm lên Supabase Database
         let { data, error } = await sbClient.from('saved_decks').select('likes, dislikes').eq('id', id).single();
         if(error) return console.log(error);
         
@@ -468,10 +480,14 @@ window.voteDeck = async (id, voteType) => {
         if (voteType === 'dislike') upObj.dislikes = data.dislikes + 1;
         
         await sbClient.from('saved_decks').update(upObj).eq('id', id);
-        localStorage.setItem(localKey, voteType);
         
-        window.loadDecksFromSupabase(currentCommunityTab);
-    } catch(err) { console.log(err); }
+        // Bỏ dòng loadDecksFromSupabase ở đây để tránh bị load lại toàn bộ tab làm mất vị trí cuộn chuột
+    } catch(err) { 
+        console.log(err); 
+        // Phục hồi lại nếu lỗi mạng
+        localStorage.removeItem(localKey);
+        if(btnElement) btnElement.classList.remove('voted');
+    }
 };
 
 const renderDeckComponent = (dbItem) => {
