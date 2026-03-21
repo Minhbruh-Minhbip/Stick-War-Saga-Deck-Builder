@@ -516,7 +516,7 @@ const renderDeckComponent = (dbItem) => {
                 .replace('onclick="nullFunction(\''+objCard.n.replace(/'/g,"\\'")+'\')"','style="cursor:default;"');
             
             deckImagesHTML += `
-<div style="width:32px;height:32px;overflow:hidden;background:#111;">
+<div style="width:16px;height:16px;overflow:hidden;background:#111;">
     <img src="${window.g(objCard.n)}"
          onerror="this.style.display='none'"
          style="width:100%;height:100%;object-fit:cover;">
@@ -542,7 +542,7 @@ const renderDeckComponent = (dbItem) => {
             ${miniCardsHTML}
         </div>
         
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,32px);gap:2px;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,64px);gap:4px;background:#222;padding:4px;border-radius:8px;border:1px solid var(--border);margin-bottom:12px;">
             ${deckImagesHTML}
         </div>
         
