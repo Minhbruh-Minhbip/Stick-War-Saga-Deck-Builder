@@ -426,21 +426,23 @@ window.saveDeckToDB = async (deckName, deckCardsArray) => {
         }]);
 
         if (error) {
-            alert("Lưu lỗi: " + error.message);
+            alert("Report this error to Minhbruh: " + error.message);
         } else {
-            alert("Đã đẩy bộ bài " + deckName + " thành công lên Cloud!");
+            alert(deckName + " successfully uploaded to the cloud.");
         }
     } catch (e) { console.log(e); }
 };
 
 window.saveCurrentDeckToSupabase = () => {
-    if(l.length < 8) return alert("Incomplete deck... but not a problem");
+    if(l.length > 2) return alert("Deck must have 2 or above cards");
+    let valid = window._v(l);
+    if(!valid) return alert("You must read the status");
     let name = prompt("Name your deck:");
     if(name && name.trim() !== "") window.saveDeckToDB(name, l);
 };
 
 window.saveRandomDeckToSupabase = () => {
-    if(!r_random_deck || r_random_deck.length < 1) return alert("Wrong card");
+    if(!r_random_deck || r_random_deck.length < 1) return alert("Nuh uh");
     let name = prompt("Name your deck:");
     if(name && name.trim() !== "") window.saveDeckToDB(name, r_random_deck);
 }
