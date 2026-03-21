@@ -459,30 +459,42 @@ window.voteDeck = async (id, voteType, btnElement) => {
     if(localStorage.getItem(localKey)) return alert("You already voted for this deck!");
     
     localStorage.setItem(localKey, voteType);
+    let originalText = btnElement ? btnElement.innerText : "";
+    
     if(btnElement) {
         btnElement.classList.add('voted');
-        let text = btnElement.innerText;
-        let match = text.match(/\d+/); 
+        let match = originalText.match(/\d+/);
         if(match) {
             let count = parseInt(match[0]) + 1;
-            btnElement.innerText = text.replace(match[0], count);
+            btnElement.innerText = originalText.replace(match[0], count);
         }
     }
     
     try {
-        let { data, error } = await sbClient.from('saved_decks').select('likes, dislikes').eq('id', id).single();
-        if(error) return console.log(error);
+        let { data, error: selectError } = await sbClient.from('saved_decks').select('likes, dislikes').eq('id', id).single();
+        if(selectError) throw selectError;
         
         let upObj = {};
         if (voteType === 'like') upObj.likes = data.likes + 1;
         if (voteType === 'dislike') upObj.dislikes = data.dislikes + 1;
         
-        await sbClient.from('saved_decks').update(upObj).eq('id', id);
+        let { error: updateError } = await sbClient.from('saved_decks').update(upObj).eq('id', id);
         
+        if(updateError) {
+            alert("Can't save on database: " + updateError.message);
+            throw updateError;
+        }
+
+        console.log("Voted!");
+
     } catch(err) { 
-        console.log(err); 
+        console.error("Lỗi Vote:", err);
+        // Hủy Vote trên UI nếu Database từ chối lưu hoặc lỗi mạng
         localStorage.removeItem(localKey);
-        if(btnElement) btnElement.classList.remove('voted');
+        if(btnElement) {
+            btnElement.classList.remove('voted');
+            btnElement.innerText = originalText; // Trả lại con số cũ
+        }
     }
 };
 
