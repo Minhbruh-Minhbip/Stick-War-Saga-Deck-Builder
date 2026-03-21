@@ -489,11 +489,10 @@ window.voteDeck = async (id, voteType, btnElement) => {
 
     } catch(err) { 
         console.error("Lỗi Vote:", err);
-        // Hủy Vote trên UI nếu Database từ chối lưu hoặc lỗi mạng
         localStorage.removeItem(localKey);
         if(btnElement) {
             btnElement.classList.remove('voted');
-            btnElement.innerText = originalText; // Trả lại con số cũ
+            btnElement.innerText = originalText;
         }
     }
 };
@@ -507,21 +506,21 @@ const renderDeckComponent = (dbItem) => {
     let d = new Date(dbItem.created_at);
     let dateStr = ("0" + d.getDate()).slice(-2) + "/" + ("0" + (d.getMonth() + 1)).slice(-2);
     
-    // Tách riêng mảng HTML cho Mini-cards (tên) và Images (ảnh ghép)
     let miniCardsHTML = "";
     let deckImagesHTML = "";
     
     dbItem.cards.forEach(cName => {
         let objCard = n.find(x => x.n === cName);
         if(objCard) {
-            // Render thẻ tên (mini card)
             miniCardsHTML += window._m(objCard, "nullFunction", false)
                 .replace('onclick="nullFunction(\''+objCard.n.replace(/'/g,"\\'")+'\')"','style="cursor:default;"');
             
-            // Render ảnh vào khối lưới
             deckImagesHTML += `
-                <div style="width:64px; height:64px; overflow:hidden; background:#111; display:flex; align-items:center; justify-content:center;">
-        <img src="${window.g(objCard.n)}" onerror="this.style.display='none'" style="width:100%; height:100%; object-fit:cover; display:block; filter:brightness(0.95);"></div>`;
+<div style="width:16px;height:16px;overflow:hidden;background:#111;">
+    <img src="${window.g(objCard.n)}"
+         onerror="this.style.display='none'"
+         style="width:100%;height:100%;object-fit:cover;">
+</div>`;
         } else {
             miniCardsHTML += `<span style="font-size:12px;color:gray">${cName}</span>`;
         }
@@ -543,7 +542,7 @@ const renderDeckComponent = (dbItem) => {
             ${miniCardsHTML}
         </div>
         
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,64px);gap:4px;background:#222;padding:4px;border-radius:8px;border:1px solid var(--border);margin-bottom:12px;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,16px);gap:2px;">
             ${deckImagesHTML}
         </div>
         
