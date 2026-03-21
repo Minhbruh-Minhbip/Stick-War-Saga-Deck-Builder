@@ -36,7 +36,6 @@
             
             <!-- TAB 0: DECK BUILDER -->
             <div id="t1" class="content-section active">
-                <!-- Chọn chế độ trận đấu cho bộ bài -->
                 <div class="control-group" style="margin-bottom: 20px;">
                     <h4 style="color: var(--primary); margin-bottom: 5px;">Select Game Mode:</h4>
                     <div class="radio-group" style="gap: 15px;">
@@ -52,7 +51,7 @@
                 
                 <div style="display:flex; gap: 10px; margin-bottom:20px;">
                     <button class="btn btn-danger" onclick="clD()">Clear Deck</button>
-                    <button class="btn" style="background:var(--order)" onclick="saveCurrentDeckToSupabase()">Save & Share to Community ☁️</button>
+                    <button class="btn" style="background:var(--order)" onclick="saveCurrentDeckToSupabase()">Save & Share to Community</button>
                 </div>
                 <div id="a1"></div>
             </div>
@@ -130,7 +129,6 @@
                     <button id="rb" class="btn" style="font-size:20px;padding:15px 40px" onclick="gR()">Random Deck</button>
                 </div>
                 
-                <!-- Casino View & Final Result (Nút lưu random đã bị ẩn/xoá theo yêu cầu) -->
                 <div id="sC" class="slot-machine"></div>
                 <div id="rRC" style="display:none">
                     <div class="deck-info" id="s2"></div>
@@ -140,7 +138,6 @@
 
             <!-- TAB 2: GLOBAL DECKS -->
             <div id="t3" class="content-section">
-                <!-- Chuyển tab cho cộng đồng -->
                 <div style="display: flex; gap: 5px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px;">
                     <button id="sm_1v1_Classic" class="mode-btn active" onclick="loadDecksFromSupabase('1v1 Classic')">1v1 Classic</button>
                     <button id="sm_1v1_Deathmatch" class="mode-btn" onclick="loadDecksFromSupabase('1v1 Deathmatch')">1v1 Deathmatch</button>
@@ -149,19 +146,15 @@
                 </div>
 
                 <div style="border: 2px dashed var(--border); padding: 15px; border-radius: 8px; margin-bottom: 20px; background: #111;">
-                    <h3 style="margin-top:0; color:var(--light);">⭐ Latest New Shared Decks ⭐(<span id="displayModeTxt"></span>)</h3>
+                    <h3 style="margin-top:0; color:var(--light);">Latest New Decks (<span id="displayModeTxt"></span>)</h3>
                     <div id="communityDecksNew" style="display:flex; flex-direction:column; gap:10px;"></div>
                 </div>
 
-                <h3 style="color:var(--general);">Top 100 Decks</h3>
-                <div id="communityDecksTop" style="display:flex; flex-direction:column; gap:15px;">
-                    <!-- Top data render from JS -->
-                </div>
+                <h3 style="color:var(--general);">Top 100 Voted Decks</h3>
+                <div id="communityDecksTop" style="display:flex; flex-direction:column; gap:15px;"></div>
             </div>
-            
         </div>
     </div>
-
     <script src="js/app.js"></script>
 </body>
 </html>
