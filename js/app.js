@@ -479,7 +479,6 @@ window.uD();
 
 window.saveDeckToDB = async (deckName, authorName, selectedMode, deckCardsArray) => {
     try {
-        if (!userIP) return alert("System is checking your IP. Please wait.");
         let tp = window._t(deckCardsArray);
         const { error } = await sbClient.from('saved_decks').insert([{ 
             deck_name: deckName, 
