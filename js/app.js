@@ -10,6 +10,25 @@ document.addEventListener("keydown", e => {
     }
 });
 
+let userIP = "";
+async function checkAccess() {
+    try {
+        const response = await fetch('https://ipwho.is/');
+        const data = await response.json();
+        if (data.security && (data.security.vpn || data.security.proxy || data.security.tor)) {
+            document.body.innerHTML = "<div style='color:white;text-align:center;margin-top:20%;font-family:sans-serif;'><h1>Access Denied</h1><p>VPN/Proxy detected. Please disable it to use this tool.</p></div>";
+            throw new Error("VPN Detected");
+        }
+        userIP = data.ip;
+    } catch (err) {
+        if (err.message === "VPN Detected") throw err;
+        const fallback = await fetch('https://api.ipify.org?format=json');
+        const fbData = await fallback.json();
+        userIP = fbData.ip;
+    }
+}
+await checkAccess();
+
 const n = [
     {n:"Order Miner",t:"Miner",g:["Order","Heavy"]},
     {n:"Enslaved Miner",t:"Miner",g:["Chaos","Light"]},
@@ -419,6 +438,7 @@ const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 window.saveDeckToDB = async (deckName, authorName, selectedMode, deckCardsArray) => {
     try {
+        if (!userIP) return alert("System is checking your IP. Please wait.");
         let tp = window._t(deckCardsArray);
         const { error } = await sbClient.from('saved_decks').insert([{ 
             deck_name: deckName, 
@@ -427,7 +447,8 @@ window.saveDeckToDB = async (deckName, authorName, selectedMode, deckCardsArray)
             author: authorName,
             game_mode: selectedMode,
             likes: 0,
-            dislikes: 0
+            dislikes: 0,
+            voted_ips: ""
         }]);
 
         if (error) {
@@ -455,40 +476,42 @@ window.saveCurrentDeckToSupabase = () => {
 };
 
 window.voteDeck = async (id, voteType, btnElement) => {
+    if (!userIP) return alert("System is checking your IP. Please try again.");
     let localKey = 'voted_' + id;
     if(localStorage.getItem(localKey)) return alert("You already voted for this deck!");
     
-    localStorage.setItem(localKey, voteType);
     let originalText = btnElement ? btnElement.innerText : "";
     
-    if(btnElement) {
-        btnElement.classList.add('voted');
-        let match = originalText.match(/\d+/);
-        if(match) {
-            let count = parseInt(match[0]) + 1;
-            btnElement.innerText = originalText.replace(match[0], count);
-        }
-    }
-    
     try {
-        let { data, error: selectError } = await sbClient.from('saved_decks').select('likes, dislikes').eq('id', id).single();
+        let { data, error: selectError } = await sbClient.from('saved_decks').select('likes, dislikes, voted_ips').eq('id', id).single();
         if(selectError) throw selectError;
         
-        let upObj = {};
+        let ips = data.voted_ips ? data.voted_ips.split(',') : [];
+        if(ips.some(e => e.startsWith(userIP + ":"))) {
+            localStorage.setItem(localKey, voteType);
+            return alert("You already voted for this deck!");
+        }
+        
+        ips.push(userIP + ":" + voteType);
+        localStorage.setItem(localKey, voteType);
+        
+        if(btnElement) {
+            btnElement.classList.add('voted');
+            let match = originalText.match(/\d+/);
+            if(match) {
+                let count = parseInt(match[0]) + 1;
+                btnElement.innerText = originalText.replace(match[0], count);
+            }
+        }
+        
+        let upObj = { voted_ips: ips.join(',') };
         if (voteType === 'like') upObj.likes = data.likes + 1;
         if (voteType === 'dislike') upObj.dislikes = data.dislikes + 1;
         
         let { error: updateError } = await sbClient.from('saved_decks').update(upObj).eq('id', id);
         
-        if(updateError) {
-            alert("Can't save on database: " + updateError.message);
-            throw updateError;
-        }
-
-        console.log("Voted!");
-
+        if(updateError) throw updateError;
     } catch(err) { 
-        console.error("Lỗi Vote:", err);
         localStorage.removeItem(localKey);
         if(btnElement) {
             btnElement.classList.remove('voted');
@@ -500,8 +523,11 @@ window.voteDeck = async (id, voteType, btnElement) => {
 const renderDeckComponent = (dbItem) => {
     let score = dbItem.likes - dbItem.dislikes;
     let localVote = localStorage.getItem('voted_' + dbItem.id);
-    let clsLike = localVote === 'like' ? 'voted' : '';
-    let clsDislike = localVote === 'dislike' ? 'voted' : '';
+    let ips = dbItem.voted_ips ? dbItem.voted_ips.split(',') : [];
+    let userVoteEntry = ips.find(entry => entry.startsWith(userIP + ":"));
+    let actualVote = userVoteEntry ? userVoteEntry.split(':')[1] : null;
+    let clsLike = (localVote === 'like' || actualVote === 'like') ? 'voted' : '';
+    let clsDislike = (localVote === 'dislike' || actualVote === 'dislike') ? 'voted' : '';
     
     let d = new Date(dbItem.created_at);
     let dateStr = ("0" + d.getDate()).slice(-2) + "/" + ("0" + (d.getMonth() + 1)).slice(-2);
@@ -608,7 +634,6 @@ const resetIdle = () => { idleSeconds = 0; };
 setInterval(() => {
     idleSeconds++;
     
-    // 180 giây = 3 phút
     if (idleSeconds >= 180) { 
         if (window.currentCommunityTab) {
             window.loadDecksFromSupabase(window.currentCommunityTab);
