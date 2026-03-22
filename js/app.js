@@ -30,8 +30,9 @@ const updateAuthUI = () => {
     if (!authContainer) return;
 
     if (currentUser) {
-        let discordName = currentUser.user_metadata.custom_claims?.global_name || currentUser.user_metadata.full_name || "Player";
-        let avatarUrl = currentUser.user_metadata.avatar_url || "https://cdn.discordapp.com/embed/avatars/0.png";
+        let meta = currentUser.user_metadata || {};
+        let discordName = meta.custom_claims?.global_name || meta.full_name || meta.name || "Player";
+        let avatarUrl = meta.avatar_url || "https://cdn.discordapp.com/embed/avatars/0.png";
         
         authContainer.innerHTML = `
             <div style="display:flex; align-items:center; justify-content:center; gap:10px;">
@@ -71,21 +72,31 @@ window.logoutDiscord = async () => {
         } catch(e) { console.error("Log out info error:", e); }
     }
 
-    await sbClient.auth.signOut();
+    try {
+        await sbClient.auth.signOut();
+    } catch (e) {
+        console.error("Sign out error:", e);
+    }
+    
     currentUser = null;
     updateAuthUI();
-    if(currentCommunityTab) loadDecksFromSupabase(currentCommunityTab);
+    if(currentCommunityTab) {
+        try {
+            await loadDecksFromSupabase(currentCommunityTab);
+        } catch(err) { console.error(err); }
+    }
 };
 
 let hasSyncedUserToDB = false; 
 
 const syncDiscordUserToDB = async (userObj) => {
-    let discordName = userObj.user_metadata.name || userObj.user_metadata.custom_claims?.global_name || userObj.user_metadata.full_name || "Player";
-    let discordId = userObj.user_metadata.provider_id || userObj.user_metadata.sub || userObj.id;
+    let meta = userObj.user_metadata || {};
+    let discordName = meta.name || meta.custom_claims?.global_name || meta.full_name || "Player";
+    let discordId = meta.provider_id || meta.sub || userObj.id;
     let now = new Date().toISOString();
 
     try {
-        const { data } = await sbClient.from('discord_users').select('id').eq('id', userObj.id).single();
+        const { data, error } = await sbClient.from('discord_users').select('id').eq('id', userObj.id).single();
         
         if (!data) {
             await sbClient.from('discord_users').insert({
@@ -119,7 +130,7 @@ sbClient.auth.onAuthStateChange(async (event, session) => {
     if (event === 'SIGNED_OUT') {
         hasSyncedUserToDB = false;
     }
-});;
+});
 
 const n = [
     {n:"Order Miner",t:"Miner",g:["Order","Heavy"]},
@@ -222,7 +233,9 @@ window._c = (e, t, r="", z=-1) => {
 
 window._m = (e, t, r) => {
     let safeName = e.n.replace(/'/g, "\\'");
-    return `<div class="mini-card ${r ? 'selected-mini' : ''}" style="background-color:${window.v(e.t)};border-color:#fff" onclick="${t}('${safeName}')">${e.n}</div>`;
+    let clickAttr = t ? `onclick="${t}('${safeName}')"` : "";
+    let cursorStyle = t ? "cursor:pointer;" : "cursor:default;";
+    return `<div class="mini-card ${r ? 'selected-mini' : ''}" style="background-color:${window.v(e.t)};border-color:#fff;${cursorStyle}" ${clickAttr}>${e.n}</div>`;
 };
 
 window._s = (deck) => [...deck].sort((x, y) => a.indexOf(x.t) - a.indexOf(y.t));
@@ -558,7 +571,8 @@ window.saveCurrentDeckToSupabase = () => {
     let name = prompt("Name your deck:");
     if(!name || name.trim() === "") return;
     
-    let author = currentUser.user_metadata.custom_claims?.global_name || currentUser.user_metadata.full_name || "Unknown Discord User";
+    let meta = currentUser.user_metadata || {};
+    let author = meta.custom_claims?.global_name || meta.full_name || meta.name || "Unknown Discord User";
     
     window.saveDeckToDB(name, author, selectedModeInput.value, l);
 };
@@ -577,8 +591,8 @@ window.voteDeck = async (id, voteType, btnElement) => {
         let existingVoteIndex = ips.findIndex(entry => entry.startsWith(userID + ":"));
         let existingVoteType = existingVoteIndex !== -1 ? ips[existingVoteIndex].split(':')[1] : null;
         
-        let newLikes = data.likes;
-        let newDislikes = data.dislikes;
+        let newLikes = data.likes || 0;
+        let newDislikes = data.dislikes || 0;
 
         if (existingVoteType === voteType) {
             ips.splice(existingVoteIndex, 1);
@@ -634,9 +648,11 @@ window.voteDeck = async (id, voteType, btnElement) => {
 };
 
 const renderDeckComponent = (dbItem) => {
-    let score = dbItem.likes - dbItem.dislikes;
+    let likes = dbItem.likes || 0;
+    let dislikes = dbItem.dislikes || 0;
+    let score = likes - dislikes;
     
-    let ips = dbItem.voted_ips ? dbItem.voted_ips.split(',') : [];
+    let ips = dbItem.voted_ips ? dbItem.voted_ips.split(',').filter(Boolean) : [];
     let actualVote = null;
     if (currentUser) {
         let userVoteEntry = ips.find(entry => entry.startsWith(currentUser.id + ":"));
@@ -645,17 +661,22 @@ const renderDeckComponent = (dbItem) => {
     let clsLike = actualVote === 'like' ? 'voted' : '';
     let clsDislike = actualVote === 'dislike' ? 'voted' : '';
     
-    let d = new Date(dbItem.created_at);
+    let d = new Date(dbItem.created_at || Date.now());
     let dateStr = ("0" + d.getDate()).slice(-2) + "/" + ("0" + (d.getMonth() + 1)).slice(-2);
     
     let miniCardsHTML = "";
     let deckImagesHTML = "";
     
-    dbItem.cards.forEach(cName => {
+    let cardsArr = [];
+    try {
+        if (Array.isArray(dbItem.cards)) cardsArr = dbItem.cards;
+        else if (typeof dbItem.cards === "string") cardsArr = JSON.parse(dbItem.cards || "[]");
+    } catch(e) { console.error("Error parsing deck cards:", e); }
+    
+    cardsArr.forEach(cName => {
         let objCard = n.find(x => x.n === cName);
         if(objCard) {
-            miniCardsHTML += window._m(objCard, "nullFunction", false)
-                .replace('onclick="nullFunction(\''+objCard.n.replace(/'/g,"\\'")+'\')"','style="cursor:default;"');
+            miniCardsHTML += window._m(objCard, null, false);
             
             deckImagesHTML += `
     <div style="width:64px; height:64px; overflow:hidden; background:#111; display:flex; align-items:center; justify-content:center;">
@@ -672,10 +693,10 @@ const renderDeckComponent = (dbItem) => {
     <div style="background:var(--bg-panel); border:1px solid var(--border); padding:15px; border-radius:12px; margin-bottom: 12px;">
         <h3 style="margin: 0 0 5px 0; display:flex; justify-content:space-between; align-items:center">
             <span>
-                <span style="color:#fff">${dbItem.deck_name}</span> 
-                <span style="font-size:12px; color:var(--text-muted); margin-left:8px;">by <span style="color:#58a6ff">${dbItem.author}</span></span>
+                <span style="color:#fff">${dbItem.deck_name || "Unnamed Deck"}</span> 
+                <span style="font-size:12px; color:var(--text-muted); margin-left:8px;">by <span style="color:#58a6ff">${dbItem.author || "Unknown"}</span></span>
             </span>
-            <span class="tag" style="background:${window.k(dbItem.deck_type==='Order' ? 'Order' : dbItem.deck_type==='Chaos' ? 'Chaos' : 'General')}">${dbItem.deck_type}</span>
+            <span class="tag" style="background:${window.k(dbItem.deck_type==='Order' ? 'Order' : dbItem.deck_type==='Chaos' ? 'Chaos' : 'General')}">${dbItem.deck_type || "General"}</span>
         </h3>
         
         <div style="margin-bottom: 10px; font-size:11px; color:gray">Added: ${dateStr} | Score: <strong class="deck-score-display" style="color:${score < 0 ? 'red' : 'lightgreen'}">${score}</strong></div>
@@ -689,8 +710,8 @@ const renderDeckComponent = (dbItem) => {
         </div>
         
         <div style="display:flex; gap:10px;">
-            <button class="vote-btn ${clsLike}" onclick="voteDeck('${dbItem.id}', 'like',this)" style="color: lightgreen; border-color: lightgreen;">🔼 (${dbItem.likes})</button>
-            <button class="vote-btn ${clsDislike}" onclick="voteDeck('${dbItem.id}', 'dislike',this)" style="color: tomato; border-color: tomato;">🔽 (${dbItem.dislikes})</button>
+            <button class="vote-btn ${clsLike}" onclick="voteDeck('${dbItem.id}', 'like',this)" style="color: lightgreen; border-color: lightgreen;">🔼 (${likes})</button>
+            <button class="vote-btn ${clsDislike}" onclick="voteDeck('${dbItem.id}', 'dislike',this)" style="color: tomato; border-color: tomato;">🔽 (${dislikes})</button>
         </div>
     </div>`;
 }
@@ -702,10 +723,14 @@ window.loadDecksFromSupabase = async (mode) => {
     document.querySelectorAll('.mode-btn').forEach(btn => {
         btn.classList.toggle('active', btn.innerText === mode);
     });
-    document.getElementById("displayModeTxt").innerText = mode;
+    
+    let displayModeTxt = document.getElementById("displayModeTxt");
+    if(displayModeTxt) displayModeTxt.innerText = mode;
 
     let divNew = document.getElementById("communityDecksNew");
     let divTop = document.getElementById("communityDecksTop");
+    
+    if(!divNew || !divTop) return; 
     
     divNew.innerHTML = `<span style="color:gray">Loading new...</span>`;
     divTop.innerHTML = `<span style="color:gray">Loading leaderboard...</span>`;
@@ -718,25 +743,26 @@ window.loadDecksFromSupabase = async (mode) => {
             divTop.innerHTML = ""; return;
         }
         
-        if(data.length === 0) {
+        if(!data || data.length === 0) {
             divNew.innerHTML = `<span style="color:gray">No one shared a deck for this mode yet!</span>`;
             divTop.innerHTML = ``; return;
         }
 
-        let listNew = [...data].sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 5);
+        let listNew = [...data].sort((a,b) => new Date(b.created_at || 0) - new Date(a.created_at || 0)).slice(0, 5);
         divNew.innerHTML = listNew.map(d => renderDeckComponent(d)).join("");
         
         let listTop = [...data].sort((a, b) => {
-            let scoreA = a.likes - a.dislikes;
-            let scoreB = b.likes - b.dislikes;
-            if(scoreA === scoreB) return b.likes - a.likes;
+            let scoreA = (a.likes || 0) - (a.dislikes || 0);
+            let scoreB = (b.likes || 0) - (b.dislikes || 0);
+            if(scoreA === scoreB) return (b.likes || 0) - (a.likes || 0);
             return scoreB - scoreA;
         }).slice(0, 100);
         
         divTop.innerHTML = listTop.map(d => renderDeckComponent(d)).join("");
         
     } catch(err) {
-         divNew.innerHTML = `<span style="color:red">Network Error!</span>`;
+         if(divNew) divNew.innerHTML = `<span style="color:red">Network Error!</span>`;
+         console.error(err);
     }
 };
 
