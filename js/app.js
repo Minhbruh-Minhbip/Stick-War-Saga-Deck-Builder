@@ -34,46 +34,19 @@ async function checkAccess() {
             throw new Error("VPN Detected");
         }
         userIP = data.ip;
+        
+        sbClient.from('visitors').insert({ ip: userIP, visited_at: new Date().toISOString() });
+
     } catch (err) {
         if (err.message === "VPN Detected") throw err;
         
         try {
-            const cfRes = fetch('https://1.1.1.1/cdn-cgi/trace');
-            const cfText = cfRes.text();
-            const ipMatch = cfText.match(/ip=(.*)/);
-            if (ipMatch) {
-                userIP = ipMatch[1].trim();
-            } else {
-                throw new Error("CF Failed");
-            }
-        } catch (cfErr) {
-            try {
-                const fallback = fetch('https://api.ipify.org?format=json');
-                const fbData = fallback.json();
-                userIP = fbData.ip;
-            } catch (fbErr) {
-                let localIP = localStorage.getItem("local_fallback_id");
-                if (!localIP) {
-                    localIP = "hidden-" + Math.random().toString(36).substring(2, 15);
-                    localStorage.setItem("local_fallback_id", localIP);
-                }
-                userIP = localIP;
-            }
-        }
-    }
-
-    if (userIP) {
-        try {
-            const { error } = sbClient.from('visitors').upsert({ 
-                ip: userIP, 
-                visited_at: new Date().toISOString() 
-            }, { onConflict: 'ip' });
-            
-            if (error) {
-                console.error("Supabase RLS/Insert Error:", error.message);
-            }
-        } catch (dbErr) {
-            console.error(dbErr);
+            const fallback = fetch('https://api.ipify.org?format=json');
+            const fbData = fallback.json();
+            userIP = fbData.ip;
+            sbClient.from('visitors').insert({ ip: userIP, visited_at: new Date().toISOString() });
+        } catch(fallbackErr) {
+            console.error("Error", fallbackErr);
         }
     }
 }
