@@ -68,7 +68,7 @@ window.logoutDiscord = async () => {
             await sbClient.from('discord_users').update({ 
                 last_logout_at: new Date().toISOString() 
             }).eq('id', currentUser.id);
-        } catch(e) { console.error("Lỗi lưu đăng xuất:", e); }
+        } catch(e) { console.error("Log out info error:", e); }
     }
 
     await sbClient.auth.signOut();
@@ -77,40 +77,49 @@ window.logoutDiscord = async () => {
     if(currentCommunityTab) loadDecksFromSupabase(currentCommunityTab);
 };
 
+let hasSyncedUserToDB = false; 
+
+const syncDiscordUserToDB = async (userObj) => {
+    let discordName = userObj.user_metadata.name || userObj.user_metadata.custom_claims?.global_name || userObj.user_metadata.full_name || "Player";
+    let discordId = userObj.user_metadata.provider_id || userObj.user_metadata.sub || userObj.id;
+    let now = new Date().toISOString();
+
+    try {
+        const { data } = await sbClient.from('discord_users').select('id').eq('id', userObj.id).single();
+        
+        if (!data) {
+            await sbClient.from('discord_users').insert({
+                id: userObj.id,
+                discord_id: discordId,
+                discord_name: discordName,
+                first_login_at: now,
+                last_login_at: now,
+                last_active_at: now
+            });
+        } else {
+            await sbClient.from('discord_users').update({
+                discord_name: discordName,
+                last_login_at: now,
+                last_active_at: now
+            }).eq('id', userObj.id);
+        }
+    } catch (err) {
+        console.error("User info-sync error:", err);
+    }
+};
+
 sbClient.auth.onAuthStateChange(async (event, session) => {
-    let previousUser = currentUser;
     currentUser = session?.user || null;
     updateAuthUI();
 
-    if (event === 'SIGNED_IN' && currentUser) {
-        let discordName = currentUser.user_metadata.name || currentUser.user_metadata.custom_claims?.global_name || "Unknown#0000";
-        let discordId = currentUser.user_metadata.provider_id || currentUser.user_metadata.sub;
-        let now = new Date().toISOString();
-
-        try {
-            const { data } = await sbClient.from('discord_users').select('id').eq('id', currentUser.id).single();
-            
-            if (!data) {
-                await sbClient.from('discord_users').insert({
-                    id: currentUser.id,
-                    discord_id: discordId,
-                    discord_name: discordName,
-                    first_login_at: now,
-                    last_login_at: now,
-                    last_active_at: now
-                });
-            } else {
-                await sbClient.from('discord_users').update({
-                    discord_name: discordName,
-                    last_login_at: now,
-                    last_active_at: now
-                }).eq('id', currentUser.id);
-            }
-        } catch (err) {
-            console.error("Lỗi cập nhật thông tin user:", err);
-        }
+    if (currentUser && !hasSyncedUserToDB) {
+        hasSyncedUserToDB = true;
+        await syncDiscordUserToDB(currentUser);
     }
-});
+    if (event === 'SIGNED_OUT') {
+        hasSyncedUserToDB = false;
+    }
+});;
 
 const n = [
     {n:"Order Miner",t:"Miner",g:["Order","Heavy"]},
