@@ -27,7 +27,7 @@ async function checkAccess() {
         userIP = fbData.ip;
     }
 }
-await checkAccess();
+checkAccess();
 
 const n = [
     {n:"Order Miner",t:"Miner",g:["Order","Heavy"]},
