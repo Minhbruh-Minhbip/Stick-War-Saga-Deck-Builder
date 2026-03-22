@@ -23,61 +23,48 @@ const SUPABASE_URL = 'https://cnsucvcbvtxocdfjrwcu.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuc3VjdmNidnR4b2NkZmpyd2N1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwNzg1ODQsImV4cCI6MjA4OTY1NDU4NH0.VnksvBK92QTq_gt_QJu4NvsCLYLErXZypaEo82rHxnc';
 const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let userIP = "";
-async function checkAccess() {
-    try {
-        const response = fetch('https://ipwho.is/');
-        const data = response.json();
+let currentUser = null;
 
-        if (data.security && (data.security.vpn || data.security.proxy || data.security.tor || data.security.hosting)) {
-            document.body.innerHTML = "<div style='color:white;text-align:center;margin-top:20%;font-family:sans-serif;'><h1>Access Denied</h1><p>VPN, Proxy, or WARP (1.1.1.1) detected. Please disable it to use this tool.</p></div>";
-            throw new Error("VPN Detected");
-        }
-        userIP = data.ip;
-    } catch (err) {
-        if (err.message === "VPN Detected") throw err;
+const updateAuthUI = () => {
+    const authContainer = document.getElementById('auth-container');
+    if (!authContainer) return;
 
-        try {
-            const cfRes = fetch('https://1.1.1.1/cdn-cgi/trace');
-            const cfText = cfRes.text();
-            const ipMatch = cfText.match(/ip=(.*)/);
-            if (ipMatch) {
-                userIP = ipMatch[1].trim();
-            } else {
-                throw new Error("CF Failed");
-            }
-        } catch (cfErr) {
-            try {
-                const fallback = fetch('https://api.ipify.org?format=json');
-                const fbData = fallback.json();
-                userIP = fbData.ip;
-            } catch (fbErr) {
-                let localIP = localStorage.getItem("local_fallback_id");
-                if (!localIP) {
-                    localIP = "hidden-" + Math.random().toString(36).substring(2, 15);
-                    localStorage.setItem("local_fallback_id", localIP);
-                }
-                userIP = localIP;
-            }
-        }
+    if (currentUser) {
+        let discordName = currentUser.user_metadata.custom_claims?.global_name || currentUser.user_metadata.full_name || "Player";
+        let avatarUrl = currentUser.user_metadata.avatar_url || "https://cdn.discordapp.com/embed/avatars/0.png";
+        
+        authContainer.innerHTML = `
+            <div style="display:flex; align-items:center; justify-content:center; gap:10px;">
+                <img src="${avatarUrl}" style="width:32px; height:32px; border-radius:50%; border: 2px solid #5865F2;">
+                <span style="color:white; font-weight:bold;">${discordName}</span>
+                <button onclick="logoutDiscord()" style="background:#ed4245; color:white; padding:5px 10px; border:none; border-radius:4px; cursor:pointer;">Logout</button>
+            </div>
+        `;
+    } else {
+        authContainer.innerHTML = `
+            <button onclick="loginDiscord()" style="background:#5865F2; color:white; padding:10px 15px; border:none; border-radius:4px; cursor:pointer; font-weight:bold; font-size:14px;">
+                🔗 Link your Discord to upload and vote on decks
+            </button>
+        `;
     }
+};
 
-    if (userIP) {
-        try {
-            const { error } = sbClient.from('visitors').upsert({ 
-                ip: userIP, 
-                visited_at: new Date().toISOString() 
-            }, { onConflict: 'ip' });
+window.loginDiscord = async () => {
+    const { error } = await sbClient.auth.signInWithOAuth({ provider: 'discord' });
+    if (error) alert("Can't connect to Discord: " + error.message);
+};
 
-            if (error) {
-                console.error("Supabase RLS/Insert Error:", error.message);
-            }
-        } catch (dbErr) {
-            console.error(dbErr);
-        }
-    }
-}
-checkAccess();
+window.logoutDiscord = async () => {
+    await sbClient.auth.signOut();
+    currentUser = null;
+    updateAuthUI();
+    if(currentCommunityTab) loadDecksFromSupabase(currentCommunityTab);
+};
+
+sbClient.auth.onAuthStateChange((event, session) => {
+    currentUser = session?.user || null;
+    updateAuthUI();
+});
 
 const n = [
     {n:"Order Miner",t:"Miner",g:["Order","Heavy"]},
@@ -506,30 +493,34 @@ window.saveDeckToDB = async (deckName, authorName, selectedMode, deckCardsArray)
 };
 
 window.saveCurrentDeckToSupabase = () => {
+    if (!currentUser) return alert("Please connect your Discord account to share decks!");
+    
     let valid = window._v(l);
-    if(!valid) return alert("You must read the status!");
+    if(!valid) return alert("You must read the status before uploading!");
     
     let selectedModeInput = document.querySelector('input[name="buildMode"]:checked');
-    if(!selectedModeInput) return alert("Please select a Game Mode first.");
+    if(!selectedModeInput) return alert("Please select a Game Mode.");
     
     let name = prompt("Name your deck:");
     if(!name || name.trim() === "") return;
     
-    let author = prompt("Who are you? (Author):");
-    if(!author || author.trim() === "") author = "Anonymous";
+    let author = currentUser.user_metadata.custom_claims?.global_name || currentUser.user_metadata.full_name || "Unknown Discord User";
     
     window.saveDeckToDB(name, author, selectedModeInput.value, l);
 };
 
 window.voteDeck = async (id, voteType, btnElement) => {
-    if (!userIP) return alert("System is checking your IP. Please try again.");
+    if (!currentUser) return alert("You need to connect your Discord account to vote!");
     
+    let userID = currentUser.id;
+
     try {
         let { data, error: selectError } = await sbClient.from('saved_decks').select('likes, dislikes, voted_ips').eq('id', id).single();
         if (selectError) throw selectError;
         
         let ips = data.voted_ips ? data.voted_ips.split(',').filter(Boolean) : [];
-        let existingVoteIndex = ips.findIndex(entry => entry.startsWith(userIP + ":"));
+        
+        let existingVoteIndex = ips.findIndex(entry => entry.startsWith(userID + ":"));
         let existingVoteType = existingVoteIndex !== -1 ? ips[existingVoteIndex].split(':')[1] : null;
         
         let newLikes = data.likes;
@@ -540,14 +531,14 @@ window.voteDeck = async (id, voteType, btnElement) => {
             if (voteType === 'like') newLikes = Math.max(0, newLikes - 1);
             if (voteType === 'dislike') newDislikes = Math.max(0, newDislikes - 1);
         } else if (existingVoteType) {
-            ips[existingVoteIndex] = userIP + ":" + voteType;
+            ips[existingVoteIndex] = userID + ":" + voteType;
             if (existingVoteType === 'like') newLikes = Math.max(0, newLikes - 1);
             if (existingVoteType === 'dislike') newDislikes = Math.max(0, newDislikes - 1);
             
             if (voteType === 'like') newLikes++;
             if (voteType === 'dislike') newDislikes++;
         } else {
-            ips.push(userIP + ":" + voteType);
+            ips.push(userID + ":" + voteType);
             if (voteType === 'like') newLikes++;
             if (voteType === 'dislike') newDislikes++;
         }
@@ -555,7 +546,7 @@ window.voteDeck = async (id, voteType, btnElement) => {
         let upObj = {
             likes: newLikes,
             dislikes: newDislikes,
-            voted_ips: ips.join(',') 
+            voted_ips: ips.join(',')
         };
         
         let { error: updateError } = await sbClient.from('saved_decks').update(upObj).eq('id', id);
@@ -584,7 +575,7 @@ window.voteDeck = async (id, voteType, btnElement) => {
 
     } catch(err) { 
         console.error(err);
-        alert("Failed to process your vote. Please try again.");
+        alert("Error processing your vote. Please try again later.");
     }
 };
 
@@ -592,8 +583,11 @@ const renderDeckComponent = (dbItem) => {
     let score = dbItem.likes - dbItem.dislikes;
     
     let ips = dbItem.voted_ips ? dbItem.voted_ips.split(',') : [];
-    let userVoteEntry = ips.find(entry => entry.startsWith(userIP + ":"));
-    let actualVote = userVoteEntry ? userVoteEntry.split(':')[1] : null;
+    let actualVote = null;
+    if (currentUser) {
+        let userVoteEntry = ips.find(entry => entry.startsWith(currentUser.id + ":"));
+        actualVote = userVoteEntry ? userVoteEntry.split(':')[1] : null;
+    }
     let clsLike = actualVote === 'like' ? 'voted' : '';
     let clsDislike = actualVote === 'dislike' ? 'voted' : '';
     
