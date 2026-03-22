@@ -751,7 +751,7 @@ const resetIdle = () => { idleSeconds = 0; };
 setInterval(() => {
     idleSeconds++;
     
-    if (idleSeconds >= 10) { 
+    if (idleSeconds >= 60) { 
         if (window.currentCommunityTab) {
             window.loadDecksFromSupabase(window.currentCommunityTab);
             console.log("Auto-reloaded Global Decks due to inactivity.");
