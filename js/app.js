@@ -28,25 +28,52 @@ async function checkAccess() {
     try {
         const response = fetch('https://ipwho.is/');
         const data = response.json();
-        
+
         if (data.security && (data.security.vpn || data.security.proxy || data.security.tor || data.security.hosting)) {
             document.body.innerHTML = "<div style='color:white;text-align:center;margin-top:20%;font-family:sans-serif;'><h1>Access Denied</h1><p>VPN, Proxy, or WARP (1.1.1.1) detected. Please disable it to use this tool.</p></div>";
             throw new Error("VPN Detected");
         }
         userIP = data.ip;
-        
-        sbClient.from('visitors').insert({ ip: userIP, visited_at: new Date().toISOString() });
-
     } catch (err) {
         if (err.message === "VPN Detected") throw err;
-        
+
         try {
-            const fallback = fetch('https://api.ipify.org?format=json');
-            const fbData = fallback.json();
-            userIP = fbData.ip;
-            sbClient.from('visitors').insert({ ip: userIP, visited_at: new Date().toISOString() });
-        } catch(fallbackErr) {
-            console.error("Error", fallbackErr);
+            const cfRes = fetch('https://1.1.1.1/cdn-cgi/trace');
+            const cfText = cfRes.text();
+            const ipMatch = cfText.match(/ip=(.*)/);
+            if (ipMatch) {
+                userIP = ipMatch[1].trim();
+            } else {
+                throw new Error("CF Failed");
+            }
+        } catch (cfErr) {
+            try {
+                const fallback = fetch('https://api.ipify.org?format=json');
+                const fbData = fallback.json();
+                userIP = fbData.ip;
+            } catch (fbErr) {
+                let localIP = localStorage.getItem("local_fallback_id");
+                if (!localIP) {
+                    localIP = "hidden-" + Math.random().toString(36).substring(2, 15);
+                    localStorage.setItem("local_fallback_id", localIP);
+                }
+                userIP = localIP;
+            }
+        }
+    }
+
+    if (userIP) {
+        try {
+            const { error } = sbClient.from('visitors').upsert({ 
+                ip: userIP, 
+                visited_at: new Date().toISOString() 
+            }, { onConflict: 'ip' });
+
+            if (error) {
+                console.error("Supabase RLS/Insert Error:", error.message);
+            }
+        } catch (dbErr) {
+            console.error(dbErr);
         }
     }
 }
