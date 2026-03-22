@@ -566,8 +566,8 @@ window.voteDeck = async (id, voteType, btnElement) => {
         let dislikeBtn = parentDiv.children[1];
         let scoreSpan = parentDiv.parentElement.querySelector('.deck-score-display'); 
 
-        likeBtn.innerText = `Upvote (${newLikes})`;
-        dislikeBtn.innerText = `Downvote (${newDislikes})`;
+        likeBtn.innerText = `🔼 (${newLikes})`;
+        dislikeBtn.innerText = `🔽 (${newDislikes})`;
 
         likeBtn.classList.remove('voted');
         dislikeBtn.classList.remove('voted');
