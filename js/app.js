@@ -50,7 +50,15 @@ const updateAuthUI = () => {
 };
 
 window.loginDiscord = async () => {
-    const { error } = await sbClient.auth.signInWithOAuth({ provider: 'discord' });
+    const currentUrl = window.location.origin + window.location.pathname; 
+
+    const { error } = await sbClient.auth.signInWithOAuth({ 
+        provider: 'discord',
+        options: {
+            redirectTo: currentUrl 
+        }
+    });
+    
     if (error) alert("Can't connect to Discord: " + error.message);
 };
 
