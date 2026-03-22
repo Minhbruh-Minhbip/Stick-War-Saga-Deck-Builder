@@ -1,5 +1,14 @@
 "use strict";
 
+const ua = navigator.userAgent || navigator.vendor || window.opera;
+if (ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1) {
+    document.body.innerHTML = "<div style='color:white;text-align:center;margin-top:20%;font-family:sans-serif;'><h1>Action Required</h1><p>Please tap the menu and select 'Open in Chrome' or 'Open in Browser' to continue.</p></div>";
+    if (/android/i.test(ua)) {
+        window.location.href = "intent://" + location.href.replace(/^https?:\/\//i, "") + "#Intent;scheme=https;package=com.android.chrome;end";
+    }
+    throw new Error("Facebook Browser Blocked");
+}
+
 let lockEvents = ["contextmenu", "copy", "cut", "selectstart", "dragstart"];
 lockEvents.forEach(e => document.addEventListener(e, event => event.preventDefault()));
 document.addEventListener("keydown", e => {
@@ -10,21 +19,35 @@ document.addEventListener("keydown", e => {
     }
 });
 
+const SUPABASE_URL = 'https://cnsucvcbvtxocdfjrwcu.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuc3VjdmNidnR4b2NkZmpyd2N1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwNzg1ODQsImV4cCI6MjA4OTY1NDU4NH0.VnksvBK92QTq_gt_QJu4NvsCLYLErXZypaEo82rHxnc';
+const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 let userIP = "";
 async function checkAccess() {
     try {
         const response = await fetch('https://ipwho.is/');
         const data = await response.json();
-        if (data.security && (data.security.vpn || data.security.proxy || data.security.tor)) {
-            document.body.innerHTML = "<div style='color:white;text-align:center;margin-top:20%;font-family:sans-serif;'><h1>Access Denied</h1><p>VPN/Proxy detected. Please disable it to use this tool.</p></div>";
+        
+        if (data.security && (data.security.vpn || data.security.proxy || data.security.tor || data.security.hosting)) {
+            document.body.innerHTML = "<div style='color:white;text-align:center;margin-top:20%;font-family:sans-serif;'><h1>Access Denied</h1><p>VPN, Proxy, or WARP (1.1.1.1) detected. Please disable it to use this tool.</p></div>";
             throw new Error("VPN Detected");
         }
         userIP = data.ip;
+        
+        await sbClient.from('visitors').upsert({ ip: userIP, visited_at: new Date().toISOString() });
+
     } catch (err) {
         if (err.message === "VPN Detected") throw err;
-        const fallback = await fetch('https://api.ipify.org?format=json');
-        const fbData = await fallback.json();
-        userIP = fbData.ip;
+        
+        try {
+            const fallback = await fetch('https://api.ipify.org?format=json');
+            const fbData = await fallback.json();
+            userIP = fbData.ip;
+            await sbClient.from('visitors').upsert({ ip: userIP, visited_at: new Date().toISOString() });
+        } catch(fallbackErr) {
+            console.error("Error", fallbackErr);
+        }
     }
 }
 checkAccess();
@@ -432,10 +455,6 @@ window.dS = (finalDeck) => {
 window.uR();
 window.uD();
 
-const SUPABASE_URL = 'https://cnsucvcbvtxocdfjrwcu.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuc3VjdmNidnR4b2NkZmpyd2N1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwNzg1ODQsImV4cCI6MjA4OTY1NDU4NH0.VnksvBK92QTq_gt_QJu4NvsCLYLErXZypaEo82rHxnc';
-const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
 window.saveDeckToDB = async (deckName, authorName, selectedMode, deckCardsArray) => {
     try {
         if (!userIP) return alert("System is checking your IP. Please wait.");
@@ -477,57 +496,79 @@ window.saveCurrentDeckToSupabase = () => {
 
 window.voteDeck = async (id, voteType, btnElement) => {
     if (!userIP) return alert("System is checking your IP. Please try again.");
-    let localKey = 'voted_' + id;
-    if(localStorage.getItem(localKey)) return alert("You already voted for this deck!");
-    
-    let originalText = btnElement ? btnElement.innerText : "";
     
     try {
         let { data, error: selectError } = await sbClient.from('saved_decks').select('likes, dislikes, voted_ips').eq('id', id).single();
-        if(selectError) throw selectError;
+        if (selectError) throw selectError;
         
-        let ips = data.voted_ips ? data.voted_ips.split(',') : [];
-        if(ips.some(e => e.startsWith(userIP + ":"))) {
-            localStorage.setItem(localKey, voteType);
-            return alert("You already voted for this deck!");
+        let ips = data.voted_ips ? data.voted_ips.split(',').filter(Boolean) : [];
+        let existingVoteIndex = ips.findIndex(entry => entry.startsWith(userIP + ":"));
+        let existingVoteType = existingVoteIndex !== -1 ? ips[existingVoteIndex].split(':')[1] : null;
+        
+        let newLikes = data.likes;
+        let newDislikes = data.dislikes;
+
+        if (existingVoteType === voteType) {
+            ips.splice(existingVoteIndex, 1);
+            if (voteType === 'like') newLikes = Math.max(0, newLikes - 1);
+            if (voteType === 'dislike') newDislikes = Math.max(0, newDislikes - 1);
+        } else if (existingVoteType) {
+            ips[existingVoteIndex] = userIP + ":" + voteType;
+            if (existingVoteType === 'like') newLikes = Math.max(0, newLikes - 1);
+            if (existingVoteType === 'dislike') newDislikes = Math.max(0, newDislikes - 1);
+            
+            if (voteType === 'like') newLikes++;
+            if (voteType === 'dislike') newDislikes++;
+        } else {
+            ips.push(userIP + ":" + voteType);
+            if (voteType === 'like') newLikes++;
+            if (voteType === 'dislike') newDislikes++;
         }
         
-        ips.push(userIP + ":" + voteType);
-        localStorage.setItem(localKey, voteType);
-        
-        if(btnElement) {
-            btnElement.classList.add('voted');
-            let match = originalText.match(/\d+/);
-            if(match) {
-                let count = parseInt(match[0]) + 1;
-                btnElement.innerText = originalText.replace(match[0], count);
-            }
-        }
-        
-        let upObj = { voted_ips: ips.join(',') };
-        if (voteType === 'like') upObj.likes = data.likes + 1;
-        if (voteType === 'dislike') upObj.dislikes = data.dislikes + 1;
+        let upObj = {
+            likes: newLikes,
+            dislikes: newDislikes,
+            voted_ips: ips.join(',') 
+        };
         
         let { error: updateError } = await sbClient.from('saved_decks').update(upObj).eq('id', id);
-        
-        if(updateError) throw updateError;
-    } catch(err) { 
-        localStorage.removeItem(localKey);
-        if(btnElement) {
-            btnElement.classList.remove('voted');
-            btnElement.innerText = originalText;
+        if (updateError) throw updateError;
+
+        let parentDiv = btnElement.parentElement;
+        let likeBtn = parentDiv.children[0];
+        let dislikeBtn = parentDiv.children[1];
+        let scoreSpan = parentDiv.parentElement.querySelector('.deck-score-display'); 
+
+        likeBtn.innerText = `Upvote (${newLikes})`;
+        dislikeBtn.innerText = `Downvote (${newDislikes})`;
+
+        likeBtn.classList.remove('voted');
+        dislikeBtn.classList.remove('voted');
+
+        if (existingVoteType !== voteType) {
+            btnElement.classList.add('voted');
         }
+
+        let newScore = newLikes - newDislikes;
+        if(scoreSpan) {
+            scoreSpan.innerText = newScore;
+            scoreSpan.style.color = newScore < 0 ? 'red' : 'lightgreen';
+        }
+
+    } catch(err) { 
+        console.error(err);
+        alert("Failed to process your vote. Please try again.");
     }
 };
 
 const renderDeckComponent = (dbItem) => {
     let score = dbItem.likes - dbItem.dislikes;
-    let localVote = localStorage.getItem('voted_' + dbItem.id);
+    
     let ips = dbItem.voted_ips ? dbItem.voted_ips.split(',') : [];
     let userVoteEntry = ips.find(entry => entry.startsWith(userIP + ":"));
     let actualVote = userVoteEntry ? userVoteEntry.split(':')[1] : null;
-    let clsLike = (localVote === 'like' || actualVote === 'like') ? 'voted' : '';
-    let clsDislike = (localVote === 'dislike' || actualVote === 'dislike') ? 'voted' : '';
+    let clsLike = actualVote === 'like' ? 'voted' : '';
+    let clsDislike = actualVote === 'dislike' ? 'voted' : '';
     
     let d = new Date(dbItem.created_at);
     let dateStr = ("0" + d.getDate()).slice(-2) + "/" + ("0" + (d.getMonth() + 1)).slice(-2);
@@ -562,7 +603,7 @@ const renderDeckComponent = (dbItem) => {
             <span class="tag" style="background:${window.k(dbItem.deck_type==='Order' ? 'Order' : dbItem.deck_type==='Chaos' ? 'Chaos' : 'General')}">${dbItem.deck_type}</span>
         </h3>
         
-        <div style="margin-bottom: 10px; font-size:11px; color:gray">Added: ${dateStr} | Score: <strong style="color:${score < 0 ? 'red' : 'lightgreen'}">${score}</strong></div>
+        <div style="margin-bottom: 10px; font-size:11px; color:gray">Added: ${dateStr} | Score: <strong class="deck-score-display" style="color:${score < 0 ? 'red' : 'lightgreen'}">${score}</strong></div>
         
         <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:8px;">
             ${miniCardsHTML}
@@ -573,8 +614,8 @@ const renderDeckComponent = (dbItem) => {
         </div>
         
         <div style="display:flex; gap:10px;">
-            <button class="vote-btn ${clsLike}" onclick="voteDeck('${dbItem.id}', 'like',this)" style="color: lightgreen; border-color: lightgreen;">Upvote (${dbItem.likes})</button>
-            <button class="vote-btn ${clsDislike}" onclick="voteDeck('${dbItem.id}', 'dislike',this)" style="color: tomato; border-color: tomato;">Downvote (${dbItem.dislikes})</button>
+            <button class="vote-btn ${clsLike}" onclick="voteDeck('${dbItem.id}', 'like',this)" style="color: lightgreen; border-color: lightgreen;">🔼 (${dbItem.likes})</button>
+            <button class="vote-btn ${clsDislike}" onclick="voteDeck('${dbItem.id}', 'dislike',this)" style="color: tomato; border-color: tomato;">🔽 (${dbItem.dislikes})</button>
         </div>
     </div>`;
 }
