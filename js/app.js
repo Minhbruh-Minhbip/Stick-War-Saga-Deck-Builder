@@ -26,8 +26,8 @@ const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let userIP = "";
 async function checkAccess() {
     try {
-        const response = await fetch('https://ipwho.is/');
-        const data = await response.json();
+        const response = fetch('https://ipwho.is/');
+        const data = response.json();
         
         if (data.security && (data.security.vpn || data.security.proxy || data.security.tor || data.security.hosting)) {
             document.body.innerHTML = "<div style='color:white;text-align:center;margin-top:20%;font-family:sans-serif;'><h1>Access Denied</h1><p>VPN, Proxy, or WARP (1.1.1.1) detected. Please disable it to use this tool.</p></div>";
@@ -38,8 +38,8 @@ async function checkAccess() {
         if (err.message === "VPN Detected") throw err;
         
         try {
-            const cfRes = await fetch('https://1.1.1.1/cdn-cgi/trace');
-            const cfText = await cfRes.text();
+            const cfRes = fetch('https://1.1.1.1/cdn-cgi/trace');
+            const cfText = cfRes.text();
             const ipMatch = cfText.match(/ip=(.*)/);
             if (ipMatch) {
                 userIP = ipMatch[1].trim();
@@ -48,8 +48,8 @@ async function checkAccess() {
             }
         } catch (cfErr) {
             try {
-                const fallback = await fetch('https://api.ipify.org?format=json');
-                const fbData = await fallback.json();
+                const fallback = fetch('https://api.ipify.org?format=json');
+                const fbData = fallback.json();
                 userIP = fbData.ip;
             } catch (fbErr) {
                 let localIP = localStorage.getItem("local_fallback_id");
@@ -64,7 +64,7 @@ async function checkAccess() {
 
     if (userIP) {
         try {
-            const { error } = await sbClient.from('visitors').upsert({ 
+            const { error } = sbClient.from('visitors').upsert({ 
                 ip: userIP, 
                 visited_at: new Date().toISOString() 
             }, { onConflict: 'ip' });
