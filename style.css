@@ -9,3 +9,8 @@
   z-index: -1;
   opacity: 0.2;
 }
+.gif {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
