@@ -713,3 +713,56 @@ setInterval(() => {
         idleSeconds = 0;
     }
 }, 1000);
+
+const genOrder = [
+    "Atreyos", "Wrathnar", "Archis", "Marrowkai", "Spearos", "Magis", 
+    "GiantLord Sightless", "Kytchu", "Thera", "Xiphos", "Zarek", "Sicklebear"
+];
+const anchorUtcMs = Date.UTC(2026, 4, 15, 19, 0, 0);
+
+window.getUnfreeGenerals = () => {
+    const nowUtcMs = Date.now();
+    const msPerWeek = 7 * 24 * 60 * 60 * 1000;
+    
+    const weeksPassed = Math.floor((nowUtcMs - anchorUtcMs) / msPerWeek);
+    
+    const numG = genOrder.length;
+    const startIndex = (-weeksPassed % numG + numG) % numG; 
+    
+    let freeG = [];
+    for (let idx = 0; idx < 5; idx++) {
+        freeG.push(genOrder[(startIndex + idx) % numG]);
+    }
+    return genOrder.filter(g => !freeG.includes(g));
+};
+
+window.toggleUnfreeGenerals = (isChecked) => {
+    let unfree = window.getUnfreeGenerals();
+    if (isChecked) {
+        unfree.forEach(name => {
+            if (!o.includes(name)) o.push(name); 
+            i = i.filter(t => t !== name); 
+        });
+    } else {
+        o = o.filter(name => !unfree.includes(name));
+    }
+    window.uR();
+};
+
+const initUnfreeBanUI = setInterval(() => {
+    let banContainer = document.getElementById("aB");
+    if (banContainer && !document.getElementById("chkBanUnfree")) {
+        let chkDiv = document.createElement("div");
+        chkDiv.style.margin = "10px 0";
+        chkDiv.style.color = "white";
+        chkDiv.style.fontSize = "14px";
+        chkDiv.innerHTML = `
+            <label style="cursor:pointer; display:flex; align-items:center; gap:8px; font-weight:bold; width:fit-content;">
+                <input type="checkbox" id="chkBanUnfree" onchange="window.toggleUnfreeGenerals(this.checked)" style="width:16px; height:16px; cursor:pointer;">
+                Ban Unfree This Week Generals
+            </label>
+        `;
+        banContainer.parentNode.insertBefore(chkDiv, banContainer);
+        clearInterval(initUnfreeBanUI);
+    }
+}, 500);
