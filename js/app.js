@@ -159,7 +159,7 @@ let currentCommunityTab = "1v1 Classic";
 
 window.g = (e) => "Cards/" + e.toLowerCase().replace(/ /g,"_").replace(/'/g,"%27") + ".png";
 window.v = (e) => e==="Miner" ? "var(--miner)" : e==="Normal Unit" ? "var(--normal)" : e==="Spell" ? "var(--spell)" : e==="Enchantment" ? "var(--enchant)" : e==="General" ? "var(--general)" : e==="Mythic" ? "var(--mythic)" : "";
-window.k = (e) => e==="Order" ? "var(--order)" : e==="Chaos" ? "var(--chaos)" : e==="Dead" ? "var(--dead)" : e==="Light" ? "var(--light)" : e==="Heavy" ? "var(--heavy)" : e==="Giant" ? "var(--giant)" : e==="General" ? "var(--general-tag)" : "";
+window.k = (e) => e==="Order" ? "var(--order)" : e==="Chaos" ? "var(--chaos)" : e==="Dead" ? "var(--dead)" : e==="Light" ? "var(--light)" : e==="Heavy" ? "var(--heavy)" : e==="Giant" ? "var(--giant)" : e==="Out-of-Date" ? "var(--general-tag)" : e==="2026.5.2407" ? "var(--general-tag)" : e==="General" ? "var(--general)" : "";
 
 window._c = (e, t, r="", z=-1) => {
     let tagsHTML = e.g.map(tag => `<span class="tag" style="background:${window.k(tag)}">${tag}</span>`).join("");
@@ -718,12 +718,12 @@ const genOrder = [
     "Atreyos", "Wrathnar", "Archis", "Marrowkai", "Spearos", "Magis", 
     "GiantLord Sightless", "Kytchu", "Thera", "Xiphos", "Zarek", "Sicklebear"
 ];
+
 const anchorUtcMs = Date.UTC(2026, 4, 15, 19, 0, 0);
 
 window.getUnfreeGenerals = () => {
     const nowUtcMs = Date.now();
     const msPerWeek = 7 * 24 * 60 * 60 * 1000;
-    
     const weeksPassed = Math.floor((nowUtcMs - anchorUtcMs) / msPerWeek);
     
     const numG = genOrder.length;
@@ -733,15 +733,42 @@ window.getUnfreeGenerals = () => {
     for (let idx = 0; idx < 5; idx++) {
         freeG.push(genOrder[(startIndex + idx) % numG]);
     }
+    
     return genOrder.filter(g => !freeG.includes(g));
+};
+
+window.updateUnfreeCountdown = () => {
+    const span = document.getElementById("unfreeCountdownTxt");
+    if (!span) return;
+
+    const nowUtcMs = Date.now();
+    const msPerWeek = 7 * 24 * 60 * 60 * 1000;
+    const weeksPassed = Math.floor((nowUtcMs - anchorUtcMs) / msPerWeek);
+    const nextRotationMs = anchorUtcMs + (weeksPassed + 1) * msPerWeek;
+    
+    const diffMs = Math.max(0, nextRotationMs - nowUtcMs);
+    
+    const d = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+    const m = Math.floor((diffMs / 1000 / 60) % 60);
+    const s = Math.floor((diffMs / 1000) % 60);
+    const timeStr = `${d}d ${h}h ${m}m ${s}s`;
+
+    const numG = genOrder.length;
+    const startIndex = (-weeksPassed % numG + numG) % numG; 
+    
+    const leavingGen = genOrder[(startIndex + 4) % numG];
+    const enteringGen = genOrder[(startIndex - 1 + numG) % numG];
+
+    span.innerText = `(${leavingGen} will be replaced by ${enteringGen} in next ${timeStr})`;
 };
 
 window.toggleUnfreeGenerals = (isChecked) => {
     let unfree = window.getUnfreeGenerals();
     if (isChecked) {
         unfree.forEach(name => {
-            if (!o.includes(name)) o.push(name); 
-            i = i.filter(t => t !== name); 
+            if (!o.includes(name)) o.push(name);
+            i = i.filter(t => t !== name);
         });
     } else {
         o = o.filter(name => !unfree.includes(name));
@@ -757,12 +784,19 @@ const initUnfreeBanUI = setInterval(() => {
         chkDiv.style.color = "white";
         chkDiv.style.fontSize = "14px";
         chkDiv.innerHTML = `
-            <label style="cursor:pointer; display:flex; align-items:center; gap:8px; font-weight:bold; width:fit-content;">
-                <input type="checkbox" id="chkBanUnfree" onchange="window.toggleUnfreeGenerals(this.checked)" style="width:16px; height:16px; cursor:pointer;">
-                Ban Unfree This Week Generals
+            <label style="cursor:pointer; display:flex; align-items:center; flex-wrap:wrap; gap:8px; font-weight:bold; width:100%;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <input type="checkbox" id="chkBanUnfree" onchange="window.toggleUnfreeGenerals(this.checked)" style="width:16px; height:16px; cursor:pointer;">
+                    Ban Unfree This Week Generals
+                </div>
+                <span id="unfreeCountdownTxt" style="font-weight:normal; color:#888; font-size:13px; font-style:italic;"></span>
             </label>
         `;
         banContainer.parentNode.insertBefore(chkDiv, banContainer);
+        
+        setInterval(window.updateUnfreeCountdown, 1000);
+        window.updateUnfreeCountdown();
+        
         clearInterval(initUnfreeBanUI);
     }
 }, 500);
