@@ -1,0 +1,377 @@
+{
+    "normal_units": [
+        {
+        "Name": "Miner",
+        "Type": ["Miner","Order","Heavy"],
+        "Queue Type":"Miner",
+        "Gold": 150,
+        "Crystal": 0,
+        "Health": 100,
+        "Population": 3,
+        "Training time (seconds)": 15,
+        "Damage": "5",
+        "DPS": 5,
+        "Traits": ["Economy","Heavy","Slow Speed","Single Target"],
+        "Description": "A Heavy, Economy Unit of the Order Empire. Gathers Gold and Crystal from resource nodes with each swing of its pickaxe.",
+        "Abilities": [],
+        "Passive":[]
+        },
+        {
+        "Name": "Enslaved Miner",
+        "Type": ["Miner","Chaos","Light"],
+        "Queue Type":"Miner",
+        "Gold": 150,
+        "Crystal": 0,
+        "Health": 90,
+        "Population": 5,
+        "Training time (seconds)": 15,
+        "Damage": "5",
+        "DPS": 5,
+        "Traits": ["Economy","Light","Slow Speed","Single Target"],
+        "Description": "A Light, Economy Unit of the Chaos Empire. Gathers Gold and Crystal from resource nodes with each swing of its pickaxe.",
+        "Abilities": [],
+        "Passive":[]
+        },
+
+        {
+        "Name": "Swordwrath",
+        "Type": ["Order","Light"],
+        "Queue Type":"Light",
+        "Gold": 125,
+        "Crystal": 0,
+        "Health": 85,
+        "Population": 3,
+        "Training time (seconds)": 11,
+        "Damage": "8 | 13 vs Heavy Units",
+        "DPS": 8,
+        "Traits": ["Melee","Light","Medium Speed","Single Target"],
+        "Description": "A low Health, Light, Melee Unit of the Order Empire. Wields a massive sword to engage in close combat.",
+        "Abilities": [
+            {
+                "Name": "Leap",
+                "Description": "Leaps forward and stuns the first enemy that it hits.",
+                "Cooldown (seconds)": 30
+            }
+        ],
+        "Passive":[]
+        },
+
+        {
+        "Name": "Sicklewrath",
+        "Type": ["Order","Light"],
+        "Queue Type":"Light",
+        "Gold": 75,
+        "Crystal": 0,
+        "Health": 60,
+        "Population": 2,
+        "Training time (seconds)": 11,
+        "Damage": "5 | 8 vs Light Units",
+        "DPS": 4.3,
+        "Traits": ["Melee","Light","Medium Speed","AOE"],
+        "Description": "A low Health, Light, Melee Unit of the Order Empire. Uses its Sickle to cause splash area of effect.",
+        "Abilities": [],
+        "Passive":[]
+        },
+
+        {
+        "Name": "Archidon",
+        "Type": ["Order","Light"],
+        "Queue Type":"Light",
+        "Gold": 300,
+        "Crystal": 0,
+        "Health": 70,
+        "Population": 3,
+        "Training time (seconds)": 13,
+        "Damage": "10 | 15 vs Light Units",
+        "DPS": 5,
+        "Traits": ["Ranged","Light","Medium Speed","Single Target"],
+        "Description": "A low Health, Light, Ranged Unit of the Order Empire. Wields a large bow to strike down foes from a distance.",
+        "Abilities": [],
+        "Passive":[]
+        },
+
+        {
+        "Name": "Spearton",
+        "Type": ["Order","Heavy"],
+        "Queue Type":"Heavy",
+        "Gold": 450,
+        "Crystal": 50,
+        "Health": 450,
+        "Population": 5,
+        "Training time (seconds)": 15,
+        "Damage": "10 | 15 vs Light Units",
+        "DPS": 7.9,
+        "Traits": ["Melee","Heavy","Medium Speed","Single Target"],
+        "Description": "A high Health, Heavy, Melee Unit of the Order that wields a powerful spear and sturdy shield.",
+        "Abilities": [
+            {
+                "Name": "Block",
+                "Description": "Reduces incoming damage by a fixed amount per hit but lowers attack speed.",
+                "Cooldown (seconds)": 0
+            }
+        ],
+        "Passive":[]
+        },
+
+        {
+        "Name": "Juggerknight",
+        "Type": ["Chaos","Heavy"],
+        "Queue Type":"Heavy",
+        "Gold": 500,
+        "Crystal": 50,
+        "Health": 500,
+        "Population": 7,
+        "Training time (seconds)": 17,
+        "Damage": "17",
+        "DPS": 10.2,
+        "Traits": ["Melee","Heavy","Slow Speed","Single Target"],
+        "Description": "A high Health, Heavy, Melee Unit of the Chaos Empire that wields an axe and shield.",
+        "Abilities": [
+            {
+                "Name": "Charge",
+                "Description": "Charges forward, dealing massive damage to the first enemy hit.",
+                "Cooldown (seconds)": 30
+            }
+        ],
+        "Passive":[]
+        },
+
+        {
+        "Name": "Dead",
+        "Type": ["Chaos","Light","Dead"],
+        "Queue Type":"Light",
+        "Gold": 50,
+        "Crystal": 0,
+        "Health": 60,
+        "Population": 1,
+        "Training time (seconds)": 8,
+        "Damage": "7",
+        "DPS": 7,
+        "Traits": ["Melee","Light","Very Slow Speed","Single Target"],
+        "Description": "A low Health, Light, Melee Unit of the Chaos Empire. A reanimated corpse that attacks with its claws.",
+        "Abilities": [],
+        "Passive":[]
+        },
+
+        {
+        "Name": "Toxic Dead",
+        "Type": ["Chaos","Heavy","Dead"],
+        "Queue Type":"Heavy",
+        "Gold": 300,
+        "Crystal": 100,
+        "Health": 225,
+        "Population": 5,
+        "Training time (seconds)": 15,
+        "Damage": "10 | 17 vs Heavy Units",
+        "DPS": 4,
+        "Traits": ["Ranged","Heavy","Very Slow Speed","Single Target"],
+        "Description": "A medium Health, Heavy, Ranged Unit of the Chaos Empire. Throws toxic projectiles that deal poison damage over time to enemies.",
+        "Abilities": [],
+        "Passive":[]
+        },
+
+        {
+        "Name": "Bomber",
+        "Type": ["Chaos","Light"],
+        "Queue Type":"Light",
+        "Gold": 75,
+        "Crystal": 0,
+        "Health": 30,
+        "Population": 1,
+        "Training time (seconds)": 9,
+        "Damage": "25 (+ 4 burn damage over 5 seconds)",
+        "DPS": 62.5,
+        "Traits": ["Melee","Light","Fast Speed","AOE","Self-Destruct"],
+        "Description": "Chaos assasination unit that deliver a devastating explosion on contact with the enemy",
+        "Abilities": [
+            {
+                "Name": "Self-Destruct",
+                "Description": "The Bomber explodes, dealing massive area of effect damage to nearby enemies but killing itself in the process.",
+                "Cooldown (seconds)": 0
+            }
+        ],
+        "Passive":[]
+        },
+
+        {
+        "Name": "Eclipsor",
+        "Type": ["Chaos","Light","Flying"],
+        "Queue Type":"Light",
+        "Gold": 400,
+        "Crystal": 100,
+        "Health": 100,
+        "Population": 5,
+        "Training time (seconds)": 20,
+        "Damage": "15 | 18 vs Light Units",
+        "DPS": 7.5,
+        "Traits": ["Ranged","Flying","Light","Medium Speed","Single Target"],
+        "Description": "A low Health, Light, Flying, Ranged Unit of the Chaos Empire. Wields a large bow to strike down foes from the air. Powerful against Light Units.",
+        "Abilities": [],
+        "Passive":[]
+        },
+
+        {
+        "Name": "Shadowrath",
+        "Type": ["Order","Light"],
+        "Queue Type":"Light",
+        "Gold": 450,
+        "Crystal": 150,
+        "Health": 250,
+        "Population": 5,
+        "Training time (seconds)": 20,
+        "Damage": "14 | 19 vs Light Units",
+        "DPS": 15,
+        "Traits": ["Melee","Light","Fast Speed","Single Target"],
+        "Description": "A medium Health, Light, Melee Unit of the Order Empire. Uses speed and agility to kill foes. Powerful against Light Units.",
+        "Abilities": [
+            {
+                "Name": "Parry",
+                "Description": "Blocks incoming damage effects such as stun.",
+                "Cooldown (seconds)": 4
+            }
+        ],
+        "Passive": [
+            {
+            "Name": "Fixate",
+            "Description": "Consecutive attacks against the same target increase damage by 5, up to a maximum of 3 stacks."
+        }
+        ]
+        },
+        
+        {
+        "Name": "Riprider",
+        "Type": ["Order","Heavy"],
+        "Queue Type":"Heavy",
+        "Gold": 750,
+        "Crystal": 0,
+        "Health": 600,
+        "Population": 8,
+        "Training time (seconds)": 20,
+        "Damage": "13 | 20 vs Heavy Units (Maximum 2 enemies got 20% damage)",
+        "DPS": 6.5,
+        "Traits": ["Melee","Heavy","Fast Speed","AOE"],
+        "Description": "Mounted fighter. Splash 20% damage to enemies in area.",
+        "Abilities": [],
+        "Passive":[]
+        },
+        
+        {
+        "Name": "Magikill",
+        "Type": ["Order","Light","Magic"],
+        "Queue Type":"Magic",
+        "Gold": 300,
+        "Crystal": 400,
+        "Health": 150,
+        "Population": 7,
+        "Training time (seconds)": 25,
+        "Damage": "5",
+        "DPS": 5,
+        "Traits": ["Melee","Ranged","Summoner","Very Slow Speed","Light","AOE"],
+        "Description": "A low Health, Light, Magic Unit of the Order Empire. Uses spellcasting to create powerful area of effect spells and summon minions.",
+        "Abilities": [
+            {
+                "Name": "Summon Minions",
+                "Description": "Summons a magical Melee minion. (Maximum 2 minions with Temple II)",
+                "Cooldown (seconds)": 8
+            },
+            {
+                "Name": "Fulminate",
+                "Description": "A powerful area of effect explosion that damages and stuns enemies in the area.",
+                "Cooldown (seconds)": 5
+            }
+        ],
+        "Passive":[]
+        },
+        
+        {
+        "Name": "Meric",
+        "Type": ["Order","Light","Magic"],
+        "Queue Type":"Magic",
+        "Gold": 150,
+        "Crystal": 200,
+        "Health": 150,
+        "Population": 5,
+        "Training time (seconds)": 17,
+        "Damage": "0",
+        "DPS": 0,
+        "Traits": ["Healer","Slow Speed","Light","Single Target"],
+        "Description": "A low Health, Light, Magic Unit of the Order Empire. Uses spellcasting to healing allies.",
+        "Abilities": [
+            {
+                "Name": "Heal",
+                "Description": "Restores health to a targeted allied unit.",
+                "Cooldown (seconds)": 1
+            },
+            {
+                "Name": "Shield",
+                "Description": "Creates a protective barrier around Meric that blocks all projectiles. (Requires Temple I)",
+                "Cooldown (seconds)": 26
+            }
+        ],
+        "Passive":[]
+        },
+        
+        {
+        "Name": "Giant",
+        "Type": ["Chaos","Heavy","Giant"],
+        "Queue Type":"Heavy | Giant with Monostrosity & Armory II",
+        "Gold": 1500,
+        "Crystal": 0,
+        "Health": 1100,
+        "Population": 10,
+        "Training time (seconds)": 40,
+        "Damage": "35 | 60 vs Heavy Units (Maximum 2 enemies got 90% damage)",
+        "DPS": 9.6,
+        "Traits": ["Melee","Very Slow Speed","Heavy","Giant","AOE"],
+        "Description": "A very high Health, Giant Unit of the Chaos Empire.",
+        "Abilities": [
+            {
+                "Name": "Earthquake",
+                "Description": "Slam the ground with a massive leg, sending out a directional shockware.",
+                "Cooldown (seconds)": 60
+            }
+        ],
+        "Passive":[]
+        },
+        
+        {
+        "Name": "Endslaved Giant",
+        "Type": ["Order","Heavy","Giant"],
+        "Queue Type":"Heavy | Giant with Monostrosity & Armory II",
+        "Gold": 1500,
+        "Crystal": 0,
+        "Health": 900,
+        "Population": 10,
+        "Training time (seconds)": 40,
+        "Damage": "35 (Maximum 3 enemies got 30% damage)",
+        "DPS": 15,
+        "Traits": ["Ranged","Very Slow Speed","Heavy","Giant","AOE"],
+        "Description": "A very high Health, Giant Unit of the Order Empire.",
+        "Abilities": [
+            {
+                "Name": "Catapult",
+                "Description": "With feet planted in the ground, the giant has 25% extra range, 17% extra damage and 10% extra splash damage. (Requires Forge I)",
+                "Cooldown (seconds)": 1
+            }
+        ],
+        "Passive":[]
+        },
+        
+        {
+        "Name": "Crawler",
+        "Type": ["Chaos","Light"],
+        "Queue Type":"Light",
+        "Gold": 50,
+        "Crystal": 0,
+        "Health": 35,
+        "Population": 1,
+        "Training time (seconds)": 9,
+        "Damage": "4",
+        "DPS": 6,
+        "Traits": ["Melee","Very Fast Speed","Light","Single Target"],
+        "Description": "A very low Health, Light Unit of the Chaos Empire.",
+        "Abilities": [],
+        "Passive":[]
+        }
+    ]
+}

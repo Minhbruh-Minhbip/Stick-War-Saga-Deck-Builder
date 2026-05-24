@@ -1,0 +1,46 @@
+{
+  "mythic_enchants": [
+    {
+      "Name": "Blazing Bolts",
+      "Types": ["Mythic"],
+      "Traits": ["Burn Effect"],
+      "Description": "Projectiles gain +5 burn damage. Projectiles gain +7 burn damage (Requires Temple I). Projectiles gain +10 burn damage (Requires Temple II)."
+    },
+    {
+      "Name": "Glacial Fetching",
+      "Types": ["Mythic"],
+      "Traits": ["Slow Effect"],
+      "Description": "Projectiles apply a 25% slow that lasts for 1 second. 30% Slow (Requires Temple I). 35% Slow (Requires Temple II)."
+    },
+    {
+      "Name": "Vampiric Soul",
+      "Types": ["Mythic"],
+      "Traits": ["Healing Effect"],
+      "Description": "Units steal health based on damage dealt on enemies. All Units gain a 9% life steal. 13% life steal (Requires Temple I). 16% life steal + cure poison (Requires Temple II)."
+    },
+    {
+      "Name": "Vault Of Prudence",
+      "Types": ["Mythic"],
+      "Traits": ["Economic Effect"],
+      "Description": "When your Gold balance is above 2000, earn 10% more Gold every 20 seconds. +300 Gold Bonus (Requires Bastion I). +600 Gold Bonus (Requires Bastion II)."
+    },
+    {
+      "Name": "Voltaic Spark",
+      "Types": ["Mythic"],
+      "Traits": ["Electric Effect"],
+      "Description": "Charges enemy units. Projectiles apply +1 electric damage and enhances electric spell effects. +2 Electric damage (Requires Temple I). +4 Electric damage (Requires Temple II)."
+    },
+    {
+      "Name": "Voltaic Armor",
+      "Types": ["Mythic"],
+      "Traits": ["Electric Effect"],
+      "Description": "For Heavy Units only. Enhances electric spell effects. When your Units attack, they charge enemy Units, applying +1 Electric damage. +2 Electric damage (Requires Temple I). +3 Electric damage (Requires Temple II)."
+    }
+  ],
+  "Mythic Passive": [
+    {
+      "Name": "Mythic Limits",
+      "Description": "Only 1 (Maximum 2 with Grasp of Zilaros enchantment) Mythic Enchantment can be added in the deck."
+    }
+  ]
+}

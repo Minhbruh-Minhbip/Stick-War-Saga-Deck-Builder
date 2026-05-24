@@ -1,0 +1,110 @@
+{
+    "enchantment_cards": [
+        {
+            "Name": "Grasp of Zilaros",
+            "Types": ["Enchantment"],
+            "Traits": ["Mythic Limit Increase"],
+            "Description": "Allows you to add 1 more Mythic card in your deck (Requires Temple II)."
+        },
+        {
+            "Name": "Boyers Trap",
+            "Types": ["Enchantment"],
+            "Traits": ["Archidon Support"],
+            "Description": "Upon death, Archidon drop a Boyers Trap. Boyers Trap: Upon enemy unit step on it, it will activate on proximity to enemy units and will trap an enemy unit with short rope. Archidons gain 10% extra health with Armory I, two traps dropped with Armory II."
+        },
+        {
+            "Name": "Brilliance",
+            "Types": ["Enchantment"],
+            "Traits": ["Economy", "Magic Units Support", "Upgrade Support"],
+            "Description": "Reduces 20% cost of Magic Units, 25% cost of Upgrade research."
+        },
+        {
+            "Name": "Castle Archer",
+            "Types": ["Enchantment"],
+            "Damage": "10 | 14 vs Heavy Units (Maximum 1 enemy got 25% damage)",
+            "DPS": 5,
+            "Traits": ["Defense", "Ranged", "AOE"],
+            "Max Units": 2,
+            "Description": "Summons Castle Archer at your Garrison. 1 Castle Archer with Bastion I, 2 Castle Archers with Bastion II. Castle Archer: Ranged Unit that can attack air and ground units. Deals 10 damage per hit, 14 damage per hit vs Heavy Units. Maximum 1 enemy unit can be hit by the AOE attack, which will receive 25% of the damage. Can't be hit by enemies but they can't move out of their position."
+        },
+        {
+            "Name": "Enchanted Pike",
+            "Types": ["Enchantment"],
+            "Traits": ["Defense", "Melee", "Single Target"],
+            "Max Units": 1,
+            "Description": "Speartons' spears upgrade to double in length and +10 damage at end of spear with Forge I. Enables projectile mythic enchantments to affect the spear with Temple II."
+        },
+        {
+            "Name": "Magikill Guide",
+            "Types": ["Enchantment"],
+            "Traits": ["Economy","Spell Support"],
+            "Description": "Reduce Spell Cards cost and cooldown based on number of Enchantment Cards in your deck. 5% less cost and cooldown per Enchantment Card with Temple I. 10% less cost and cooldown per Enchantment Card with Temple II."
+        },
+        {
+            "Name": "Mana Burst",
+            "Types": ["Enchantment"],
+            "Traits": ["Magic Units Support", "Abilities Support"],
+            "Description": "Reduce 15% cooldown of Order Units' abilities and Magic Units gain 10% extra movement speed. On a Magikill death, creates an area of explosion that deals 60 damage on enemy units. On Meric death, creates an area of explosion that instanly heals 100 health for friendly units."
+        },
+        {
+            "Name": "Miner Upgrade",
+            "Types": ["Enchantment"],
+            "Traits": ["Economy", "Miner Units Support"],
+            "Description": "Upgrade for Miner Units. +20% mining rate, +10 health, 20% faster training speed with Bastion I. 35% mining rate, +20 health, 35% faster training with Bastion II."
+        },
+        {
+            "Name": "Mining Engineer",
+            "Types": ["Enchantment"],
+            "Traits": ["Defense", "Miner Units Ability"],
+            "Description": "Enables Wall Building ability for Miner Units. Walls can be built on the battlefield and can be used to block enemy units walk through. Enables Wall Building ability with 250 health with Forge I. Walls have 350 health with Forge II."
+        },
+        {
+            "Name": "Monostrosity",
+            "Types": ["Enchantment"],
+            "Traits": ["Giant Units Support"],
+            "Description": "Increases the size and health of Giant Units. 15% increase in size and health with Armory I. 30% increase in size and health with Armory II."
+        },
+        {
+            "Name": "Rune Of Reanimation",
+            "Types": ["Enchantment"],
+            "Traits": ["Summon","Dead Units Support"],
+            "Description": "Causes poisoned enemies to respawn as Deads. Dead Units have 20% more health."
+        },
+        {
+            "Name": "Salvager's Smithy",
+            "Types": ["Enchantment"],
+            "Traits": ["Economy"],
+            "Description": "Gain 20 Gold when an enemy dies. Refund 15% of the Gold cost when an allied unit dies."
+        },
+        {
+            "Name": "Secret Tunnel",
+            "Types": ["Enchantment"],
+            "Traits": ["Mobility", "Spawning Support"],
+            "Description": "Spawns units from the middle of the battlefield while holding the Center Tower (except Miner Units). Miner Units gain +3 damage, 10% extra health, 10% mining speed. Enables with Bastion I."
+        },
+        {
+            "Name": "Spearton Spawn",
+            "Types": ["Enchantment"],
+            "Traits": ["Summon"],
+            "Description": "While holding the Center Tower, spawns up to 4 Spirit Speartons from the middle of the battlefield. All prior Spearton spawns must die before new ones can spawn. Spirit Speartons have the original Spearton's stats, but they are free to spawn and can be spawned while the Center Tower is held. Enables and spawns 1 Spirit Spearton with Bastion I. Spawns 2 Spirit Speartons with Bastion II. Spawns 4 Spirit Speartons can be spawned with Barrack II."
+        },
+        {
+            "Name": "Spirit Dead",
+            "Types": ["Enchantment"],
+            "Traits": ["Summon"],
+            "Description": "While holding the Center Tower, spawns up to 4 Spirit Deads from the middle of the battlefield. No need to all prior Spirit Dead spawns must die before new ones can spawn. Spirit Deads have the original Dead's stats, but they are free to spawn and can be spawned while the Center Tower is held. Enables and spawns 1 Spirit Dead with Temple I. Spawns 2 Spirit Deads with Temple II. Spawns 4 Spirit Deads can be spawned with Barrack II."
+        },
+        {
+            "Name": "Summoning Staff",
+            "Types": ["Enchantment"],
+            "Traits": ["Summon", "Spell Support"],
+            "Description": "After casting a spell, spawn a Dead at your army's front line. 10% Spell cooldown reduction with Temple I. Spawns 2 Deads with Temple II."
+        },
+        {
+            "Name": "Toxic Totally",
+            "Types": ["Enchantment"],
+            "Traits": ["Damage","Poison Effect", "Chaos Units Support"],
+            "Description": "Your Chaos Units attacks apply poison that deals 1 damage per second with Temple I. Poison damage increased to 3 damage per second with Temple II."
+        }
+    ]
+}

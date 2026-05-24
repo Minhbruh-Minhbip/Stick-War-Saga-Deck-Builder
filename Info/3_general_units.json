@@ -1,0 +1,411 @@
+{
+    "general_units": [
+        {
+            "Name": "Archis",
+            "Type": ["Order", "Light", "General"],
+            "Gold": 600,
+            "Crystal": 200,
+            "Health": 300,
+            "Damage": "25 | 35 vs Light Units",
+            "DPS": 12.5,
+            "Traits": ["Ranged", "Light", "Medium Speed", "Single Target"],
+            "Description": "Founder of the Archidons, is a master archer.",
+            "Abilities": [
+                {
+                    "Name": "Roll",
+                    "Description": "Archis rolls in the joystick's direction, gaining increased attack speed for his next three arrows and 5 seconds (Required Armory I).",
+                    "Duration (seconds)": 5,
+                    "Cooldown (seconds)": 20
+                },
+                {
+                    "Name": "Teather",
+                    "Description": "Archis rolls in the joystick's direction, priming a tether. His next shot launches a rope that pins the target to the ground, limiting its movement to the rope's length for a short time.",
+                    "Cooldown (seconds)": 25
+                }
+            ],
+            "Passive":[]
+        },
+
+        {
+            "Name": "Sicklebear",
+            "Type": ["Order", "Light", "General"],
+            "Gold": 600,
+            "Crystal": 200,
+            "Health": 500,
+            "Damage": "15 | 20 vs Light Units (Maximum 3 enemies got 100% damage)",
+            "DPS": 12.9,
+            "Traits": ["Melee", "Summoner", "Light", "Medium Speed", "AOE"],
+            "Description": "Founder of the Sicklewraths.",
+            "Abilities": [
+                {
+                    "Name": "Rampage",
+                    "Description": "Sicklebear tranforms into his bear form, gaining double health & max health and trample. While in bear form, he knocks enemies into the air when running through them (Unlocking after 10 Sicklewraths have died).",
+                    "Duration (seconds)": 50,
+                    "Cooldown (seconds)": 60
+                },
+                {
+                    "Name": "Selfless Sickles",
+                    "Description": "Call in Sicklewrath. Each additional activation will call an additional Sicklewrath, maxing out at 8 Sicklewraths. Using Rampage will reset the call to 1.",
+                    "Cooldown (seconds)": 2.5
+                }
+            ],
+            "Passive":[]
+        },
+
+        {
+            "Name": "Xiphos",
+            "Type": ["Order", "Light", "General"],
+            "Gold": 600,
+            "Crystal": 200,
+            "Health": 650,
+            "Damage": "25 | 45 vs Heavy Units",
+            "DPS": 21.4,
+            "Traits": ["Melee", "Light", "Medium Speed", "Single Target"],
+            "Description": "Current leader of the Swordwraths.",
+            "Abilities": [
+                {
+                    "Name": "Bladebreaker",
+                    "Description": "After succesfully blocking an enemy attack, Xiphos's next attack deals bonus damage base on a percentage of the target's current health.",
+                    "Cooldown (seconds)": 10
+                },
+                {
+                    "Name": "Heroic Leap",
+                    "Description": "Xiphos charges up and leaps in the aimed direction, slamming down to the ground and deal area damage, knock enemies into the air.",
+                    "Cooldown (seconds)": 20
+                },
+                {
+                    "Name": "Rage",
+                    "Description": "Xiphos inspires nearby light units, granting them increased attack speed and movement speed for short duration.",
+                    "Duration (seconds)": 10,
+                    "Cooldown (seconds)": 45
+                }
+            ],
+            "Passive":[
+                {
+                    "Name": "Combo",
+                    "Description": "On the 3rd hit of each attack combo, Xiphos deals +15 damage and knocks enemy into the air."
+                },
+                {
+                    "Name": "Way of the Sword",
+                    "Description": "Swordwraths reduce 10% cost and train 25% faster while Xiphos is on the battlefield."
+                }
+            ]
+        },
+
+        {
+            "Name": "Atreyos",
+            "Type": ["Order","Heavy","General"],
+            "Gold": 750,
+            "Crystal": 200,
+            "Health": 525,
+            "Damage": "25 | 30 vs Light Units",
+            "DPS": 19.7,
+            "Traits": ["Melee", "Heavy", "Medium Speed", "Single Target"],
+            "Description": "Current leader of the Speartons.",
+            "Abilities": [
+                {
+                    "Name": "Block",
+                    "Description": "Enters a defensive stance that reduces incoming damage but slows movement and attack speed.",
+                    "Cooldown (seconds)": 0
+                },
+                {
+                    "Name": "Clicky",
+                    "Description": "Summons Clicky - his Riptor pet, to the battlefield for 45 seconds (Requires Barrack I).",
+                    "Duration (seconds)": 45,
+                    "Cooldown (seconds)": 30
+                },
+                {
+                    "Name": "Crashdown",
+                    "Description": "Likes Xiphos's Heroic Leap, Atreyos charges up and leaps in the aimed direction, slamming down to the ground and deal area damage, knock enemies into the air.",
+                    "Cooldown (seconds)": 20
+                }
+            ],
+            "Passive":[
+                {
+                    "Name": "Way of the Spear",
+                    "Description": "Speartons train 30% faster while Atreyos is on the battlefield."
+                },
+                {
+                    "Name": "Respawn",
+                    "Description": "Everytime Atreyos retrains, he gains more 50 health & max health and more 2 | 3 vs Light Units damage. This effect caps at 5th respawn",
+                    "Max stacks": 5
+                }
+            ]
+        },
+
+        {
+            "Name": "Spearos",
+            "Type": ["Order", "Heavy", "General"],
+            "Gold": 500,
+            "Crystal": 300,
+            "Health": 650,
+            "Damage": "30 | 35 vs Light Units",
+            "DPS": 23.7,
+            "Traits": ["Melee", "Heavy", "Medium Speed", "Freeze Effect Attack", "Single Target"],
+            "Description": "Founder of the Speartons",
+            "Abilities": [
+                {
+                    "Name": "Block",
+                    "Description": "Enters a defensive stance that reduces incoming damage but slows movement and attack speed.",
+                    "Cooldown (seconds)": 0
+                },
+                {
+                    "Name": "Ice Path",
+                    "Description": "Spearos leaves a trail of ice behind him, slowing enemies that walk on it.",
+                    "Duration (seconds)": 20,
+                    "Cooldown (seconds)": 45
+                },
+                {
+                    "Name": "Deep Freeze",
+                    "Description": "Slowed enemies within range are further slowed. Units already afflicted by Ice Path or another freeze effect will suffer even greater slow effect (Requires Temple I).",
+                    "Cooldown (seconds)": 40
+                }
+            ],
+            "Passive":[]
+        },
+
+        {
+            "Name": "Wrathnar",
+            "Type": ["Light", "General"],
+            "Gold": 500,
+            "Crystal": 300,
+            "Health": 450,
+            "Damage": "35",
+            "DPS": 30,
+            "Traits": ["Melee", "Light", "Medium Speed", "Burn Effect Attack", "Single Target","AOE"],
+            "Description": "Founder of the Swordwraths",
+            "Abilities": [
+                {
+                    "Name": "Ashfall Slam",
+                    "Description": "Wrathnar leaps into the air, leaving only his shadow below. Within 5 seconds, he can aim and slams down to the ground, dealing area damage and applying burn to enemies hit.",
+                    "Cooldown (seconds)": 45
+                },
+                {
+                    "Name": "Lava Quake",
+                    "Description": "Wrathnar drives his sword into the ground, unleashing a lava-fueled quake in the aim direction. Enemies hit are knocked into the air and take burn damage over time.",
+                    "Cooldown (seconds)": 30
+                }
+            ],
+            "Passive":[]
+        },
+
+        {
+            "Name": "Thera",
+            "Type": ["Order", "Light", "Magic", "General"],
+            "Gold": 200,
+            "Crystal": 400,
+            "Health": 300,
+            "Damage": "0",
+            "DPS": 0,
+            "Traits": ["Healing", "Light", "Slow Speed", "Single Target"],
+            "Description": "Current leader of the Merics",
+            "Abilities": [
+                {
+                    "Name": "Heal",
+                    "Description": "Restores health to a targeted allied unit.",
+                    "Cooldown (seconds)": 1
+                },
+                {
+                    "Name": "Thera's Ward",
+                    "Description": "Summon a sacred healing ward that restores health to nearby allies over time.",
+                    "Duration (seconds)": 15,
+                    "Cooldown (seconds)": 60
+                },
+                {
+                    "Name": "Flight of the Foretold",
+                    "Description": "Thera gains flight ability and psychic protection, shielding nearby allies from death and restoring health when they would fall.",
+                    "Duration (seconds)": 15,
+                    "Cooldown (seconds)": 50
+                }
+            ],
+            "Passive":[]
+        },
+
+        {
+            "Name": "Magis",
+            "Type": ["Order","Light","Magic","General"],
+            "Gold": 400,
+            "Crystal": 400,
+            "Health": 500,
+            "Damage": "25",
+            "DPS": 25,
+            "Traits": ["Melee", "Summoner", "Light", "Medium Speed", "AOE"],
+            "Description": "Founder of the Magikills.",
+            "Abilities": [
+                {
+                    "Name": "Summon Minions",
+                    "Description": "Summons a magical Melee minion. (Maximum 2 minions with Temple II)",
+                    "Cooldown (seconds)": 8
+                },
+                {
+                    "Name": "Arc Field",
+                    "Description": "Summons a powerful electric field that suspends enemies within its area for 3 seconds. Applying electric effect to each units in that field. (Requires Temple I)",
+                    "Cooldown (seconds)": 20
+                },
+                {
+                    "Name": "Sky Volt",
+                    "Description": "Summons a storm cloud above a target unit, striking the area with lightning and dealing area-of-effect spark damage.",
+                    "Cooldown (seconds)": 20
+                }
+
+            ],
+            "Passive":[]
+        },
+
+        {
+            "Name": "Marrowkai",
+            "Type": ["Chaos", "Light", "Magic", "General", "Dead"],
+            "Gold": 400,
+            "Crystal": 400,
+            "Health": 425,
+            "Damage": "20 (Maximum 3 enemies got 33% damage)",
+            "DPS": 12,
+            "Traits": ["Dead", "Melee", "Summoner", "Light", "Slow Speed", "AOE"],
+            "Description": "Called as Kai. Current leader of The Chaos Empire, as known as Adicai - Atreyos's brother and late leader of the Speartons, when he was alived.",
+            "Abilities": [
+                {
+                    "Name": "Summon Deads",
+                    "Description": "Summons 4 Deads rise to fight for him.",
+                    "Cooldown (seconds)": 8
+                },
+                {
+                    "Name": "Hell Fist",
+                    "Description": "Marrowkai aims & slams to the ground, causing fists to erupt along a path, dealing area damage and knocking enemies into the air.",
+                    "Cooldown (seconds)": 20
+                },
+                {
+                    "Name": "Reap",
+                    "Description": "Sends a reaper to the targeted unit, forcing them to run forward uncontrollably (Requires Temple I).",
+                    "Duration (seconds)": 5,
+                    "Cooldown (seconds)": 30
+                }
+            ],
+            "Passive":[
+                {
+                    "Name": "Combined with Giantlord Sightless",
+                    "Description": "When paired in a deck with Giantlord Sightless, they train together. If the pair fall, Kai will continue to fight, while Sightless will limp back to the garrison. When Kai falls and retreats, he will limp back to garrison and retrain together with Sightless."
+                }
+            ]
+        },
+
+        {
+            "Name": "Giantlord Sightless",
+            "Type": ["Chaos", "Heavy", "Giant", "General"],
+            "Gold": 1500,
+            "Crystal": 300,
+            "Health": 2000,
+            "Damage": "55 (Maximum 3 enemies got 90% damage)",
+            "DPS": 18.3,
+            "Traits": ["Heavy", "Giant", "Medium Speed", "AOE"],
+            "Description": "Current leader of Giants.",
+            "Abilities": [
+                {
+                    "Name": "Alphaquake",
+                    "Description": "Slam the ground with a massive leg, sending out a directional shockware (Requires Temple I).",
+                    "Cooldown (seconds)": 30
+                },
+                {
+                    "Name": "Dash",
+                    "Description": "Dashes in the joystick's direction, dealing damage to enemies in its path.",
+                    "Cooldown (seconds)": 15
+                }
+                
+            ],
+            "Passive":[
+                {
+                    "Name": "Combined with Kai",
+                    "Description": "When paired in a deck with Marrowkai, they train together. If the pair fall, Kai will continue to fight, while Sightless will limp back to the garrison. When Kai falls and retreats, he will limp back to garrison and retrain together with Sightless."
+                }
+            ]
+        },
+
+        {
+            "Name": "Kytchu",
+            "Type": ["Order", "Light", "General"],
+            "Gold": 600,
+            "Crystal": 200,
+            "Health": 275,
+            "Damage": "25 | 35 vs Heavy Units",
+            "DPS": 12.5,
+            "Traits": ["Ranged", "Light", "Medium Speed", "Single Target"],
+            "Description": "Current leader of the Archidons.",
+            "Abilities": [
+                {
+                    "Name": "Roll",
+                    "Description": "Kytchu rolls in the joystick's direction (Required Armory I).",
+                    "Cooldown (seconds)": 15
+                },
+                {
+                    "Name": "Focus Flare",
+                    "Description": "Kytchu's next shot fires a flare arrow, marking a target location. All Archidons then fire 2 arrows at the marked location, ignoring range limits.",
+                    "Cooldown (seconds)": 25
+                },
+                {
+                    "Name": "Splitfire",
+                    "Description": "Kytchu fires 5 arrows that deal stun and damage to each unit got hit.",
+                    "Cooldown (seconds)": 20
+                }
+            ],
+            "Passive":[
+                    {
+                        "Name": "Way of the Bow",
+                        "Description": "Archidons reduce 10% cost and train 25% faster while Kytchu is on the battlefield."
+                    }
+            ]
+        },
+
+        {
+            "Name": "King Zarek",
+            "Type": ["Order", "Light", "General"],
+            "Gold": 400,
+            "Crystal": 400,
+            "Health": 500,
+            "Damage": "25",
+            "DPS": 25,
+            "Traits": ["Melee", "Light", "Slow Speed", "Single Target"],
+            "Description": "Current King of the Order Empires, is the father of Kytchu, Xiphos, Shade, Icaron, Adicai and Atreyos.",
+            "Abilities": [
+                {
+                    "Name": "Banner of Order",
+                    "Description": "He plants the Banner of Order on the battlefield, boosting the attack and movement speed of nearby allied units.",
+                    "Duration (seconds)": 25,
+                    "Cooldown (seconds)": 45
+                },
+                {
+                    "Name": "Golden Attack",
+                    "Description": "King Zarek commands his Golden Speartons to strike. They move into attack mode and engage the nearby enemy.",
+                    "Cooldown (seconds)": 2
+                },
+                {
+                    "Name": "Golden Defense",
+                    "Description": "King Zarek commands his Golden Speartons to defend. They move into defense mode and defending Zarek above all else.",
+                    "Cooldown (seconds)": 2
+                }
+
+            ],
+            "Passive":[
+                {
+                    "Name": "For the Order Empire",
+                    "Description": "While King Zarek is on the battlefield, Order units train 30% faster."
+                },
+                {
+                    "Name": "Golden Speartons",
+                    "Description": "Commands 1 Golden Spearton Guard (Required Armory I). Commands 2 Golden Spearton Guards (Required Armory II). Golden Speartons are elite Speartons with higher stats and unique golden armor. They will defend King Zarek above all else."
+                }
+            ]
+        }
+    ],
+    "Queue Type": "General",
+    "Training time (seconds)": 50,
+    "General Passive": [
+        {
+            "Name": "Relentless",
+            "Description": "When defeated, limps back to the garrison and begins recorvery (healing). After 30 cooldown seconds, they automatically return to the battlefield with full health (retrain)."
+        },
+        {
+            "Name": "Elite",
+            "Description": "Only one per player on the battlefield."
+        }
+    ],
+    "Population": 9
+}

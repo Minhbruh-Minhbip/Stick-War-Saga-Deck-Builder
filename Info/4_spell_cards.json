@@ -1,0 +1,117 @@
+{
+  "spell_cards": [
+    {
+      "Name": "Illuminate",
+      "Type": ["Spell"],
+      "Crystal": 50,
+      "Traits": ["Information"],
+      "Description": "Reveals the entire Battlefield, the enemy's Resources and the enemy's Population for 10 seconds.\nProvides a speed boost to Magic Units for 15 seconds.",
+      "Cooldown (seconds)": 45
+    },
+    {
+      "Name": "Miner Hustle",
+      "Type": ["Spell"],
+      "Crystal": 50,
+      "Traits": ["Economy Effect"],
+      "Description": "Boosts Miners' speed by 50% for 10 seconds.",
+      "Cooldown (seconds)": 45
+    },
+    {
+      "Name": "Rage",
+      "Type": ["Spell"],
+      "Crystal": 50,
+      "Traits": ["Light Units Support"],
+      "Description": "Boosts Light Units' attack and movement speed by 25% for 5 seconds.",
+      "Cooldown (seconds)": 25
+    },
+    {
+      "Name": "Summoners Toll",
+      "Type": ["Spell"],
+      "Crystal": 100,
+      "Traits": ["Summon"],
+      "Description": "When active, if an enemy casts a spell, 1 Spearton Dead spawns against them.\nSpawns an additional Spearton Dead. (Requires Temple I)",
+      "Cooldown (seconds)": 60
+    },
+    {
+      "Name": "Surge",
+      "Type": ["Spell"],
+      "Crystal": 100,
+      "Traits": ["Electric Effect", "Slow Effect", "Burn Effect", "Poison Effect"],
+      "Description": "Improves Elemental effects duration by 50% and damage frequency by 50% for 10 seconds.",
+      "Cooldown (seconds)": 30
+    },
+    {
+      "Name": "Tesla Coil",
+      "Type": ["Spell"],
+      "Crystal": 100,
+      "Traits": ["Electric Effect"],
+      "Description": "Transforms a captured Center Tower into a powerful electric tower that discharges electricity.",
+      "Cooldown (seconds)": 60
+    },
+    {
+      "Name": "Healing Ward",
+      "Type": ["Spell"],
+      "Crystal": 125,
+      "Traits": ["Healing Effect"],
+      "Description": "Cure and Heal friendly Units within the spell's range; lasts for 15 seconds.",
+      "Cooldown (seconds)": 45
+    },
+    {
+      "Name": "Acid Rain",
+      "Type": ["Spell"],
+      "Crystal": 150,
+      "Traits": ["Poison Effect"],
+      "Description": "Conjures Acid Rain to fall from the sky, poisoning non-Toxic Units. Deads gain speed bonus when in the rain.\nAcid Rain does not cover either base.",
+      "Cooldown (seconds)": 60
+    },
+    {
+      "Name": "Double Edged",
+      "Type": ["Spell"],
+      "Crystal": 150,
+      "Traits": ["Summon"],
+      "Description": "Spawns Spirit Speartons for each player that automatically attack.\nEach player spawns 2 Spirit Speartons from their own side that automatically attack. (Requires Temple I)",
+      "Cooldown (seconds)": 45
+    },
+    {
+      "Name": "Heavy Healing Wisp",
+      "Type": ["Spell"],
+      "Crystal": 150,
+      "Traits": ["Heavy Units Support","Healing Effect"],
+      "Description": "Creates a wisp that Heals one Heavy Unit at a time for 25 Health per second; lasts for 10 seconds.",
+      "Cooldown (seconds)": 60
+    },
+    {
+      "Name": "Lightning Storm",
+      "Type": ["Spell"],
+      "Crystal": 150,
+      "Traits": ["Electric Effect"],
+      "Description": "Creates a thunderstorm, causing a slow moving storm cloud to strike lightning on enemies.",
+      "Cooldown (seconds)": 60
+    },
+    {
+      "Name": "Projectile Barrier",
+      "Type": ["Spell"],
+      "Crystal": 150,
+      "Traits": ["Defense"],
+      "Description": "Conjures Ã  protective shield around your army's front lines that blocks all projectiles for 12 seconds.",
+      "Cooldown (seconds)": 60
+    },
+    {
+      "Name": "Snow Squall",
+      "Type": ["Spell"],
+      "Crystal": 150,
+      "Traits": ["Slow Effect"],
+      "Description": "Creates a snow squall that slows affected Units; lasts for 15 seconds.",
+      "Cooldown (seconds)": 60
+    },
+    {
+      "Name": "Scorch",
+      "Type": ["Spell"],
+      "Crystal": 200,
+      "Traits": ["Burn Effect"],
+      "Description": "Every 5 seconds add 1 second to the duration. Calls down a hail of comets that land over 2 seconds. Targets hit will be knocked down and take a medium amount of damage and receive burn damage. Maxes out at 50 seconds. 10 stacks will produce 10x comets.",
+      "Max Stacks": 10,
+      "Cooldown (seconds)": 5
+    }
+  ]
+}

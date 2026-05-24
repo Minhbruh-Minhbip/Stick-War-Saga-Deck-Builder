@@ -1,0 +1,145 @@
+{
+    "game_infos": {
+        "game_name": "Stick War: Saga",
+        "type": ["Real-time Strategy", "Action", "Tower Defense", "Multiplayer","Singleplayer","Simulation"],
+        "Deck": "This is a pack of 8 cards that player choices before joining the battle. Deck created by 4 types of cards: Unit, Spell, Enchantment and Mythic. This must include 1 Miner card and 1 Unit card. Each card only appears once in the deck. Each decks only have 1 Mythic (or 2 Mythics if player has the Grasp of Zilaros enchantment in their deck). The rest of the cards can be any type. Players can only use the cards in their deck during battle.",
+        "Miner": "A special unit that can mine Gold, Crystal and build Walls.",
+        "Unit": "A card that can be used to summon that unit during battle. Each Unit has its own stats and abilities.",
+        "Spell": "A card that can be cast during battle. Each Spell has its own effects and can be used to support your Units or affect your enemy Units.",
+        "Enchantment": "A card that gives advantages to your army during battle. Each Enchantment has its own effects and can be used to support your army, or defend against enemy attacks.",
+        "Mythic": "A powerful card that gives significant advantages to your army during battle. Each Mythic has its own effects and can be used to support your army, or defend against enemy attacks. Only 1 Mythic (or 2 Mythics with Grasp of Zilaros enchantment in the deck) can be added in the deck.",
+        "Upgrade system": [
+            {
+            "Info": "List of Upgrades that players can buy during battle to enhance their army. Each Upgrade has its own effects and can be used to support your army. Maximum 5 of this list can be bought during battle. This isn't a card, so it won't be added to the deck. Players can only buy Upgrades that they have unlocked by buying the previous Upgrade in the same branch. For example, players can only buy Barrack II after buying Barrack I. If there is an Upgrade that researching, players can't buy any other Upgrade until the researching is done. Each Upgrade has its own cost, which can be paid with Gold or Crystal. Players can only buy Upgrades that they have enough Gold or Crystal to pay for.",
+            "Upgrades": [
+                {
+                    "Name": "Barrack I",
+                    "Gold Cost": 200,
+                    "Description": "+20% Training Speed."
+                },
+                {
+                    "Name": "Barrack II",
+                    "Gold Cost": 600,
+                    "Requires": "Barrack I",
+                    "Description": "+25% Training Speed."
+                },
+                {
+                    "Name": "Temple I",
+                    "Crystal Cost": 200,
+                    "Description": "-25% Abilities Cooldown."
+                },
+                {
+                    "Name": "Temple II",
+                    "Crystal Cost": 600,
+                    "Requires": "Temple I",
+                    "Description": "-40% Abilities Cooldown."
+                },
+                {
+                    "Name": "Bastion I",
+                    "Crystal Cost": 200,
+                    "Description": "+25% Castle Archer Damage & Mining Rate, Speed."
+                },
+                {
+                    "Name": "Bastion II",
+                    "Crystal Cost": 600,
+                    "Requires": "Bastion I",
+                    "Description": "+40% Castle Archer Damage & Mining Rate, Speed."
+                },
+                {
+                    "Name": "Forge I",
+                    "Gold Cost": 200,
+                    "Description": "+10% Unit Damage."
+                },
+                {
+                    "Name": "Forge II",
+                    "Gold Cost": 600,
+                    "Requires": "Forge I",
+                    "Description": "+20% Unit Damage."
+                },
+                {
+                    "Name": "Armory I",
+                    "Gold Cost": 200,
+                    "Description": "+10% Unit Health."
+                },
+                {
+                    "Name": "Armory II",
+                    "Gold Cost": 600,
+                    "Requires": "Armory I",
+                    "Description": "+20% Unit Health."
+                }
+            ]
+            }
+        ],
+        "Unit's Empire Types": [
+            {
+                "Name": "Order",
+                "Description": "Units from the Order Empire. There is no any effect for this unit type."
+            },
+            {
+                "Name": "Chaos",
+                "Description": "Units from the Chaos Empire. Can cure from poison effect and heal themselves."
+            }
+        ],
+        "Center Tower": "A special tower located in the middle of the battlefield. Players can capture the Center Tower by sending a unit to it. The player who captures the Center Tower will gain 10 Gold every 10 seconds and can spawn units from the middle of the battlefield with the Secret Tunnel Enchantment. If a player loses the Center Tower, they will lose the Gold bonus and can't spawn units from the middle of the battlefield.",
+        "Units' Abilities": "Are Skills of that type unit that players can use to support they strategies, or kill enemy units.",
+        "In-game informations": {
+            "Mode": [
+                {
+                    "Name": "Standard 1v1",
+                    "Description": "This is a mode where players compete against each other with limited resources and personnel at the start of the match.",
+                    "Starting (Each player)": [
+                        {
+                            "Gold": 500,
+                            "Crystal": 0,
+                            "Units": "2 Miner (or 2 Enslaved Miner base on the Miner type player choose to add in their deck)."
+                        }
+                    ],
+                    "Population Limit (Each player)": 100,
+                    "Start time of Sudden Death (minutes)": 13
+                },
+                {
+                    "Name": "Standard 2v2",
+                    "Description": "This is a mode in which you and your teammates must create strategies and coordinate to defeat two players from the opposing team. Each player uses their own deck and has limited resources and personnel at the start of the match.",
+                    "Starting (Each player)": [
+                        {
+                            "Gold": 500,
+                            "Crystal": 0,
+                            "Units": "2 Miners (or 2 Enslaved Miners base on the Miner type player choose to add in their deck)."
+                        }
+                    ],
+                    "Population Limit (Each player)": 85,
+                    "Start time of Sudden Death (minutes)": 13
+                },
+                {
+                    "Name": "Deathmatch 1v1",
+                    "Description": "This is a mode where players compete against each other with abundant resources and personnel at the start of the match.",
+                    "Starting (Each player)": [
+                        {
+                            "Gold": 3000,
+                            "Crystal": 1500,
+                            "Units": "6 Miners (or 6 Enslaved Miners base on the Miner type player choose to add in their deck)."
+                        }
+                    ],
+                    "Population Limit (Each player)": 100,
+                    "Start time of Sudden Death (minutes)": 7
+                },
+                {
+                    "Name": "Deathmatch 2v2",
+                    "Description": "This is a mode in which you and your teammates must create strategies and coordinate to defeat two players from the opposing team. Each player uses their own deck and has abundant resources and personnel at the start of the match.",
+                    "Starting (Each player)": [
+                        {
+                            "Gold": 3000,
+                            "Crystal": 1500,
+                            "Units": "6 Miners (or 6 Enslaved Miners base on the Miner type player choose to add in their deck)."
+                        }
+                    ],
+                    "Population Limit (Each player)": 85,
+                    "Start time of Sudden Death (minutes)": 7
+                }
+            ],
+            "Statue": "This is the player's defensive base and also the opponent's offensive base. The statue has 2000 health in 1v1 mode and 3500 health in 2v2 mode. If your Statue's health reaches 0, you lose, and vice versa.",
+            "Population Limit": "This is a mechanism that limit the number of units in the battlefield in player's army",
+            "Sudden Death": "This is a time-limited match mechanism. During Sudden Death, both statues will take damage until the health of one of them drops to 0. If both statues has the same health and reach 0 together, the game will base on the player who still controlling Center Tower to be the winner. And if there is no one control the Center Tower, the game will set Tie-breaker and the statue on left side automatically drop first."
+        }
+    }
+}
