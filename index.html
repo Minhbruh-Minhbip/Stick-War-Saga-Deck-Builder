@@ -167,14 +167,16 @@
     </div>
 
     <script>
+    const BACKEND_URL = "https://8080-01ks9x719g5jp5n06ds6hgndkm.cloudspaces.litng.ai";
+
     async function send() {
-        const msg = document.getElementById('input').value;
-        const res = await fetch('/chat', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({message: msg})
-        });
-        const data = await res.json();
+    const msg = document.getElementById('input').value;
+    const res = await fetch(`${BACKEND_URL}/chat`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message: msg})
+    });
+    const data = await res.json();
         document.getElementById('messages').innerHTML += `<div class="bubble">${data.response}</div>`;
     }
     </script>
