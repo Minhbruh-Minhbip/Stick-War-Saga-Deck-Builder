@@ -168,16 +168,28 @@
 
     <script>
     const BACKEND_URL = "https://8080-01ks9x719g5jp5n06ds6hgndkm.cloudspaces.litng.ai";
-
+    document.getElementById('input').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') { send(); }
+    });
     async function send() {
-    const msg = document.getElementById('input').value;
+    const input = document.getElementById('input');
+    const msg = input.value;
+    if (!msg) return; // Không gửi nếu trống
+    
+    input.value = ''; // Xóa ô nhập sau khi gửi
+    document.getElementById('messages').innerHTML += `<div class="bubble"><b>You:</b> ${msg}</div>`;
+    
     const res = await fetch(`${BACKEND_URL}/chat`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({message: msg})
     });
     const data = await res.json();
-        document.getElementById('messages').innerHTML += `<div class="bubble">${data.response}</div>`;
+    document.getElementById('messages').innerHTML += `<div class="bubble"><b>Control Whip:</b> ${data.response}</div>`;
+    
+    // Tự động cuộn xuống dưới cùng
+    const msgBox = document.getElementById('messages');
+    msgBox.scrollTop = msgBox.scrollHeight;
     }
     </script>
     <script src="js/app.js"></script>
