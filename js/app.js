@@ -9,16 +9,6 @@ if (ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1) {
     throw new Error("Facebook Browser Blocked");
 }
 
-let lockEvents = ["contextmenu", "copy", "cut", "selectstart", "dragstart"];
-lockEvents.forEach(e => document.addEventListener(e, event => event.preventDefault()));
-document.addEventListener("keydown", e => {
-    if (e.key === "F12" || 
-        (e.ctrlKey && e.shiftKey && ["I", "J", "C"].includes(e.key)) || 
-        (e.ctrlKey && ["u", "c", "s", "p", "a"].includes(e.key.toLowerCase()))) {
-        e.preventDefault();
-    }
-});
-
 const SUPABASE_URL = 'https://cnsucvcbvtxocdfjrwcu.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuc3VjdmNidnR4b2NkZmpyd2N1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwNzg1ODQsImV4cCI6MjA4OTY1NDU4NH0.VnksvBK92QTq_gt_QJu4NvsCLYLErXZypaEo82rHxnc';
 const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
