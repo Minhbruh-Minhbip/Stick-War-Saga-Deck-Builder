@@ -189,18 +189,19 @@ async function send() {
     input.value = '';
     const msgBox = document.getElementById('messages');
     msgBox.innerHTML += `<div class="bubble"><b>You:</b> ${msg}</div>`;
-    // --- HIỆU ỨNG LOADING ---
-    const loadingDiv = document.createElement('div');
-    loadingDiv.className = 'loading-dots';
-    loadingDiv.innerHTML = 'Control Whip <span>.</span><span>.</span><span>.</span>';
-    msgBox.appendChild(loadingDiv);
-    msgBox.scrollTop = msgBox.scrollHeight;
     
     // Tạo bong bóng AI trống
     const botBubble = document.createElement('div');
     botBubble.className = 'bubble';
     botBubble.innerHTML = '<b>Control Whip: </b>';
     msgBox.appendChild(botBubble);
+    msgBox.scrollTop = msgBox.scrollHeight;
+    
+    // --- HIỆU ỨNG LOADING ---
+    const loadingDiv = document.createElement('div');
+    loadingDiv.className = 'loading-dots';
+    loadingDiv.innerHTML = '<span>.</span><span>.</span><span>.</span>';
+    msgBox.appendChild(loadingDiv);
     msgBox.scrollTop = msgBox.scrollHeight;
 
     try {
