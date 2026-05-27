@@ -851,7 +851,7 @@ async function send() {
     copyBtn.onclick = () => {
         navigator.clipboard.writeText(fullBotMessage).then(() => {
             copyBtn.innerHTML = '✅';
-            setTimeout(() => copyBtn.innerHTML = '📋 Copy', 2000);
+            setTimeout(() => copyBtn.innerHTML = '📋 Copy 📋', 2000);
         });
     };
     botBubble.appendChild(copyBtn);
