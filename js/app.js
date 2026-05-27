@@ -844,13 +844,13 @@ async function send() {
 
     const copyBtn = document.createElement('button');
     copyBtn.className = 'copy-btn';
-    copyBtn.innerHTML = '📋 Copy';
+    copyBtn.innerHTML = '📋 Copy 📋';
     
     let fullBotMessage = "";
     
     copyBtn.onclick = () => {
         navigator.clipboard.writeText(fullBotMessage).then(() => {
-            copyBtn.innerHTML = '✅ Copied!';
+            copyBtn.innerHTML = '✅';
             setTimeout(() => copyBtn.innerHTML = '📋 Copy', 2000);
         });
     };
