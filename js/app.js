@@ -788,3 +788,121 @@ const initUnfreeBanUI = setInterval(() => {
         clearInterval(initUnfreeBanUI);
     }
 }, 500);
+
+
+const BACKEND_URL = "https://8080-01ks9x719g5jp5n06ds6hgndkm.cloudspaces.litng.ai";
+
+// Hàm xử lý định dạng text giống Discord (Markdown cơ bản)
+function formatDiscordText(text) {
+    // 1. Escape HTML để tránh lỗi vỡ giao diện nếu AI sinh ra thẻ HTML
+    let formatted = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    
+    // 2. Format Code block: ```code```
+    formatted = formatted.replace(/```([\s\S]*?)```/g, '<pre class="code-block"><code>$1</code></pre>');
+    
+    // 3. Format Inline code: `code`
+    formatted = formatted.replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>');
+    
+    // 4. Format Bold: **bold**
+    formatted = formatted.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    
+    // 5. Format Italic: *italic*
+    formatted = formatted.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+    return formatted;
+}
+
+// Bắt sự kiện phím (Hỗ trợ Shift + Enter)
+document.getElementById('input').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault(); // Ngăn việc tự động tạo dòng mới khi ấn Enter
+        send();
+    }
+    // Nếu là Shift + Enter, trình duyệt tự động xuống dòng (yêu cầu thẻ <textarea>)
+});
+
+function toggleChat() {
+    document.getElementById('chat-box').classList.toggle('open');
+}
+
+async function send() {
+    const input = document.getElementById('input');
+    const msg = input.value.trim(); // Xóa khoảng trắng thừa
+    if (!msg) return;
+    
+    input.value = ''; // Xóa input sau khi gửi
+    const msgBox = document.getElementById('messages');
+    
+    // Khung tin nhắn của User (có định dạng và giữ nguyên dấu xuống dòng)
+    msgBox.innerHTML += `
+        <div class="bubble user-bubble">
+            <b>You:</b> 
+            <div class="msg-content">${formatDiscordText(msg)}</div>
+        </div>`;
+    
+    // Tạo bong bóng AI
+    const botBubble = document.createElement('div');
+    botBubble.className = 'bubble bot-bubble';
+    
+    const botHeader = document.createElement('div');
+    botHeader.innerHTML = '<b>Control Whip: </b>';
+    botBubble.appendChild(botHeader);
+
+    // Khung chứa nội dung AI (sẽ được cập nhật liên tục)
+    const botContent = document.createElement('div');
+    botContent.className = 'msg-content';
+    botBubble.appendChild(botContent);
+
+    // Nút Copy (Ẩn đi, chỉ hiện khi rê chuột hoặc luôn hiện tùy CSS của bạn)
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'copy-btn';
+    copyBtn.innerHTML = '📋 Copy';
+    
+    // Biến lưu trữ toàn bộ text thô (raw text) để copy
+    let fullBotMessage = "";
+    
+    copyBtn.onclick = () => {
+        navigator.clipboard.writeText(fullBotMessage).then(() => {
+            copyBtn.innerHTML = '✅ Copied!';
+            setTimeout(() => copyBtn.innerHTML = '📋 Copy', 2000);
+        });
+    };
+    botBubble.appendChild(copyBtn);
+    
+    msgBox.appendChild(botBubble);
+    msgBox.scrollTop = msgBox.scrollHeight;
+    
+    // --- HIỆU ỨNG LOADING ---
+    const loadingDiv = document.createElement('div');
+    loadingDiv.className = 'loading-dots';
+    loadingDiv.innerHTML = '<span>.</span><span>.</span><span>.</span>';
+    msgBox.appendChild(loadingDiv);
+    msgBox.scrollTop = msgBox.scrollHeight;
+
+    try {
+        const response = await fetch(`${BACKEND_URL}/chat`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({message: msg})
+        });
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        loadingDiv.remove();
+        
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            
+            const chunk = decoder.decode(value, { stream: true });
+            fullBotMessage += chunk; // Lưu vào biến raw
+            
+            // Xử lý Markdown & hiển thị
+            botContent.innerHTML = formatDiscordText(fullBotMessage); 
+            msgBox.scrollTop = msgBox.scrollHeight;
+        }
+    } catch (e) {
+        loadingDiv.remove();
+        botContent.innerHTML += "<br><span style='color:red'>Error connecting.</span>";
+    }
+}

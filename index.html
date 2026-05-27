@@ -164,70 +164,13 @@
         <img src="Cards/control_whip.png" alt="Chat">
     </div>
     <div id="chat-box" class="closed">
-    <div id="messages"></div>
-    <div class="input-area">
-        <input type="text" id="input" placeholder="Ask Control Whip...">
-        <button onclick="send()">⤴</button>
+        <div id="messages"></div>
+            <div class="input-area">
+                <textarea id="input" rows="1" placeholder="Ask Control Whip AI..."></textarea>
+                <button onclick="send()">⤴</button>
+            </div>
+        </div>
     </div>
-    </div>
-    </div>
-
-    <script>
-    const BACKEND_URL = "https://8080-01ks9x719g5jp5n06ds6hgndkm.cloudspaces.litng.ai";
-    document.getElementById('input').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') { send(); }
-    });
-   function toggleChat() {
-    document.getElementById('chat-box').classList.toggle('open');
-}
-
-async function send() {
-    const input = document.getElementById('input');
-    const msg = input.value;
-    if (!msg) return;
-    
-    input.value = '';
-    const msgBox = document.getElementById('messages');
-    msgBox.innerHTML += `<div class="bubble"><b>You:</b> ${msg}</div>`;
-    
-    // Tạo bong bóng AI trống
-    const botBubble = document.createElement('div');
-    botBubble.className = 'bubble';
-    botBubble.innerHTML = '<b>Control Whip: </b>';
-    msgBox.appendChild(botBubble);
-    msgBox.scrollTop = msgBox.scrollHeight;
-    
-    // --- HIỆU ỨNG LOADING ---
-    const loadingDiv = document.createElement('div');
-    loadingDiv.className = 'loading-dots';
-    loadingDiv.innerHTML = '<span>.</span><span>.</span><span>.</span>';
-    msgBox.appendChild(loadingDiv);
-    msgBox.scrollTop = msgBox.scrollHeight;
-
-    try {
-        const response = await fetch(`${BACKEND_URL}/chat`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({message: msg})
-        });
-
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        loadingDiv.remove();
-        
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            
-            const chunk = decoder.decode(value, { stream: true });
-            botBubble.innerHTML += chunk; // Hiển thị từng đoạn ngay lập tức
-            msgBox.scrollTop = msgBox.scrollHeight;
-        }
-    } catch (e) {
-        botBubble.innerHTML += "<br><span style='color:red'>Error connecting.</span>";
-    }
-}
-    </script>
     <script src="js/app.js"></script>
     <video autoplay muted loop id="bg-video">
         <source src="video.mp4" type="video/mp4">
