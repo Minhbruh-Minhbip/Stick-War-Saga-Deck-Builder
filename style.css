@@ -113,14 +113,12 @@
     0% { opacity: 0.2; } 20% { opacity: 1; } 100% { opacity: 0.2; }
 }
 
-/* BẮT BUỘC: Để chữ giữ được khoảng trắng và tự xuống dòng (\n) */
 .msg-content {
     white-space: pre-wrap; 
     word-break: break-word;
     margin-top: 5px;
 }
 
-/* Trang trí nút Copy */
 .copy-btn {
     background: none;
     border: none;
@@ -134,9 +132,8 @@
     text-decoration: underline;
 }
 
-/* Trang trí Markdown (Giống Discord) */
 .code-block {
-    background-color: #2b2d31; /* Màu nền tối giống Discord */
+    background-color: #2b2d31;
     color: #f8f8f2;
     padding: 10px;
     border-radius: 5px;
