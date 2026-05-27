@@ -44,7 +44,7 @@
         "Training time (seconds)": 11,
         "Damage": "8 | 13 vs Heavy Units",
         "DPS": 8,
-        "Traits": ["Melee","Light","Medium Speed","Single Target"],
+        "Traits": ["Melee","Sword man","Light","Medium Speed","Single Target"],
         "Description": "A low Health, Light, Melee Unit of the Order Empire. Wields a massive sword to engage in close combat.",
         "Abilities": [
             {
@@ -67,7 +67,7 @@
         "Training time (seconds)": 11,
         "Damage": "5 | 8 vs Light Units",
         "DPS": 4.3,
-        "Traits": ["Melee","Light","Medium Speed","AOE"],
+        "Traits": ["Melee","Sickle man","Light","Medium Speed","AOE"],
         "Description": "A low Health, Light, Melee Unit of the Order Empire. Uses its Sickle to cause splash area of effect.",
         "Abilities": [],
         "Passive":[]
@@ -84,7 +84,7 @@
         "Training time (seconds)": 13,
         "Damage": "10 | 15 vs Light Units",
         "DPS": 5,
-        "Traits": ["Ranged","Light","Medium Speed","Single Target"],
+        "Traits": ["Ranged","Bow man","Light","Medium Speed","Single Target"],
         "Description": "A low Health, Light, Ranged Unit of the Order Empire. Wields a large bow to strike down foes from a distance.",
         "Abilities": [],
         "Passive":[]
@@ -101,7 +101,7 @@
         "Training time (seconds)": 15,
         "Damage": "10 | 15 vs Light Units",
         "DPS": 7.9,
-        "Traits": ["Melee","Heavy","Medium Speed","Single Target"],
+        "Traits": ["Melee","Spear man","Heavy","Medium Speed","Single Target"],
         "Description": "A high Health, Heavy, Melee Unit of the Order that wields a powerful spear and sturdy shield.",
         "Abilities": [
             {
@@ -124,7 +124,7 @@
         "Training time (seconds)": 17,
         "Damage": "17",
         "DPS": 10.2,
-        "Traits": ["Melee","Heavy","Slow Speed","Single Target"],
+        "Traits": ["Melee","Skeleton","Spear man","Axe","Heavy","Slow Speed","Single Target"],
         "Description": "A high Health, Heavy, Melee Unit of the Chaos Empire that wields an axe and shield.",
         "Abilities": [
             {
@@ -147,7 +147,7 @@
         "Training time (seconds)": 8,
         "Damage": "7",
         "DPS": 7,
-        "Traits": ["Melee","Light","Very Slow Speed","Single Target"],
+        "Traits": ["Melee","Dead","Light","Very Slow Speed","Single Target"],
         "Description": "A low Health, Light, Melee Unit of the Chaos Empire. A reanimated corpse that attacks with its claws.",
         "Abilities": [],
         "Passive":[]
@@ -164,7 +164,7 @@
         "Training time (seconds)": 15,
         "Damage": "10 | 17 vs Heavy Units",
         "DPS": 4,
-        "Traits": ["Ranged","Heavy","Very Slow Speed","Single Target"],
+        "Traits": ["Ranged","Dead","Heavy","Very Slow Speed","Single Target"],
         "Description": "A medium Health, Heavy, Ranged Unit of the Chaos Empire. Throws toxic projectiles that deal poison damage over time to enemies.",
         "Abilities": [],
         "Passive":[]
@@ -204,7 +204,7 @@
         "Training time (seconds)": 20,
         "Damage": "15 | 18 vs Light Units",
         "DPS": 7.5,
-        "Traits": ["Ranged","Flying","Light","Medium Speed","Single Target"],
+        "Traits": ["Ranged","Flying","Bow man","Light","Medium Speed","Single Target"],
         "Description": "A low Health, Light, Flying, Ranged Unit of the Chaos Empire. Wields a large bow to strike down foes from the air. Powerful against Light Units.",
         "Abilities": [],
         "Passive":[]
@@ -221,7 +221,7 @@
         "Training time (seconds)": 20,
         "Damage": "14 | 19 vs Light Units",
         "DPS": 15,
-        "Traits": ["Melee","Light","Fast Speed","Single Target"],
+        "Traits": ["Melee","Light","Ninja","Fast Speed","Single Target"],
         "Description": "A medium Health, Light, Melee Unit of the Order Empire. Uses speed and agility to kill foes. Powerful against Light Units.",
         "Abilities": [
             {
@@ -249,7 +249,7 @@
         "Training time (seconds)": 20,
         "Damage": "13 | 20 vs Heavy Units (Maximum 2 enemies got 20% damage)",
         "DPS": 6.5,
-        "Traits": ["Melee","Heavy","Fast Speed","AOE"],
+        "Traits": ["Melee","Heavy","Animal Rider","Fast Speed","AOE"],
         "Description": "Mounted fighter. Splash 20% damage to enemies in area.",
         "Abilities": [],
         "Passive":[]
@@ -266,7 +266,7 @@
         "Training time (seconds)": 25,
         "Damage": "5",
         "DPS": 5,
-        "Traits": ["Melee","Ranged","Summoner","Very Slow Speed","Light","AOE"],
+        "Traits": ["Melee","Ranged","Magic","Summoner","Very Slow Speed","Light","AOE"],
         "Description": "A low Health, Light, Magic Unit of the Order Empire. Uses spellcasting to create powerful area of effect spells and summon minions.",
         "Abilities": [
             {
@@ -294,7 +294,7 @@
         "Training time (seconds)": 17,
         "Damage": "0",
         "DPS": 0,
-        "Traits": ["Healer","Slow Speed","Light","Single Target"],
+        "Traits": ["Healer","Slow Speed","Magic","Light","Single Target"],
         "Description": "A low Health, Light, Magic Unit of the Order Empire. Uses spellcasting to healing allies.",
         "Abilities": [
             {
@@ -345,7 +345,7 @@
         "Training time (seconds)": 40,
         "Damage": "35 (Maximum 3 enemies got 30% damage)",
         "DPS": 15,
-        "Traits": ["Ranged","Very Slow Speed","Heavy","Giant","AOE"],
+        "Traits": ["Ranged","Very Slow Speed","Throw Stone","Heavy","Giant","AOE"],
         "Description": "A very high Health, Giant Unit of the Order Empire.",
         "Abilities": [
             {
@@ -368,7 +368,7 @@
         "Training time (seconds)": 9,
         "Damage": "4",
         "DPS": 6,
-        "Traits": ["Melee","Very Fast Speed","Light","Single Target"],
+        "Traits": ["Melee","Very Fast Speed","Cat","Light","Single Target"],
         "Description": "A very low Health, Light Unit of the Chaos Empire.",
         "Abilities": [],
         "Passive":[]

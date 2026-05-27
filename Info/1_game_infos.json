@@ -1,7 +1,7 @@
 {
     "game_infos": {
         "game_name": "Stick War: Saga",
-        "type": ["Real-time Strategy", "Action", "Tower Defense", "Multiplayer","Singleplayer","Simulation"],
+        "type": ["Real-time Strategy","Stick Man", "Action", "Tower Defense", "Multiplayer","Singleplayer","Simulation"],
         "Deck": "This is a pack of 8 cards that player choices before joining the battle. Deck created by 4 types of cards: Unit, Spell, Enchantment and Mythic. This must include 1 Miner card and 1 Unit card. Each card only appears once in the deck. Each decks only have 1 Mythic (or 2 Mythics if player has the Grasp of Zilaros enchantment in their deck). The rest of the cards can be any type. Players can only use the cards in their deck during battle.",
         "Miner": "A special unit that can mine Gold, Crystal and build Walls.",
         "Unit": "A card that can be used to summon that unit during battle. Each Unit has its own stats and abilities.",
