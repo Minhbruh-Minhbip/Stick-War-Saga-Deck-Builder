@@ -874,12 +874,16 @@ async function send() {
 
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
-        loadingDiv.remove();
+        
+        let isFirstChunk = true; 
         
         while (true) {
             const { done, value } = await reader.read();
             if (done) break;
-            
+            if (isFirstChunk) {
+                loadingDiv.remove();
+                isFirstChunk = false;
+            }
             const chunk = decoder.decode(value, { stream: true });
             fullBotMessage += chunk;
             
