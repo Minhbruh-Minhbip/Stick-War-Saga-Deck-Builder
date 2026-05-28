@@ -790,7 +790,7 @@ const initUnfreeBanUI = setInterval(() => {
 }, 500);
 
 
-const BACKEND_URL = "https://8080-01ks9x719g5jp5n06ds6hgndkm.cloudspaces.litng.ai";
+const BACKEND_URL = "https://12453-01ksq70xf6g3jc5z4maytcn0j3.cloudspaces.litng.ai/";
 
 function formatDiscordText(text) {
     let formatted = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
