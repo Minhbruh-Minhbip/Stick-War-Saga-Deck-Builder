@@ -8,7 +8,7 @@
             "Health": 300,
             "Damage": "25 | 35 vs Light Units",
             "DPS": 12.5,
-            "Traits": ["Ranged", "Light", "Medium Speed", "Single Target"],
+            "Traits": ["Ranged", "Light", "Bow man", "Medium Speed", "Single Target"],
             "Description": "Founder of the Archidons, is a master archer.",
             "Abilities": [
                 {
@@ -34,7 +34,7 @@
             "Health": 500,
             "Damage": "15 | 20 vs Light Units (Maximum 3 enemies got 100% damage)",
             "DPS": 12.9,
-            "Traits": ["Melee", "Summoner", "Light", "Medium Speed", "AOE"],
+            "Traits": ["Melee", "Summoner","Sickle man", "Light", "Medium Speed", "AOE"],
             "Description": "Founder of the Sicklewraths.",
             "Abilities": [
                 {
@@ -60,7 +60,7 @@
             "Health": 650,
             "Damage": "25 | 45 vs Heavy Units",
             "DPS": 21.4,
-            "Traits": ["Melee", "Light", "Medium Speed", "Single Target"],
+            "Traits": ["Melee", "Light","Sword man", "Medium Speed", "Single Target", "Buff"],
             "Description": "Current leader of the Swordwraths.",
             "Abilities": [
                 {
@@ -100,7 +100,7 @@
             "Health": 525,
             "Damage": "25 | 30 vs Light Units",
             "DPS": 19.7,
-            "Traits": ["Melee", "Heavy", "Medium Speed", "Single Target"],
+            "Traits": ["Melee", "Heavy","Shield man","Spear", "Medium Speed", "Single Target", "Buff"],
             "Description": "Current leader of the Speartons.",
             "Abilities": [
                 {
@@ -141,7 +141,7 @@
             "Health": 650,
             "Damage": "30 | 35 vs Light Units",
             "DPS": 23.7,
-            "Traits": ["Melee", "Heavy", "Medium Speed", "Freeze Effect Attack", "Single Target"],
+            "Traits": ["Melee", "Heavy","Shield man","Spear", "Medium Speed", "Freeze Effect Attack", "Single Target"],
             "Description": "Founder of the Speartons",
             "Abilities": [
                 {
@@ -172,7 +172,7 @@
             "Health": 450,
             "Damage": "35",
             "DPS": 30,
-            "Traits": ["Melee", "Light", "Medium Speed", "Burn Effect Attack", "Single Target","AOE"],
+            "Traits": ["Melee", "Light","Sword man", "Medium Speed", "Burn Effect Attack", "Single Target","AOE"],
             "Description": "Founder of the Swordwraths",
             "Abilities": [
                 {
@@ -197,7 +197,7 @@
             "Health": 300,
             "Damage": "0",
             "DPS": 0,
-            "Traits": ["Healing", "Light", "Slow Speed", "Single Target"],
+            "Traits": ["Healing", "Light","Magic", "Slow Speed", "Single Target","Support"],
             "Description": "Current leader of the Merics",
             "Abilities": [
                 {
@@ -229,7 +229,7 @@
             "Health": 500,
             "Damage": "25",
             "DPS": 25,
-            "Traits": ["Melee", "Summoner", "Light", "Medium Speed", "AOE"],
+            "Traits": ["Melee", "Summoner", "Magic", "Electric Effect Attack", "Light", "Medium Speed", "AOE"],
             "Description": "Founder of the Magikills.",
             "Abilities": [
                 {
@@ -260,7 +260,7 @@
             "Health": 425,
             "Damage": "20 (Maximum 3 enemies got 33% damage)",
             "DPS": 12,
-            "Traits": ["Dead", "Melee", "Summoner", "Light", "Slow Speed", "AOE"],
+            "Traits": ["Dead", "Melee", "Skeleton", "Summoner", "Light", "Slow Speed", "AOE"],
             "Description": "Called as Kai. Current leader of The Chaos Empire, as known as Adicai - Atreyos's brother and late leader of the Speartons, when he was alived.",
             "Abilities": [
                 {
@@ -296,7 +296,7 @@
             "Health": 2000,
             "Damage": "55 (Maximum 3 enemies got 90% damage)",
             "DPS": 18.3,
-            "Traits": ["Heavy", "Giant", "Medium Speed", "AOE"],
+            "Traits": ["Heavy", "Giant", "Medium Speed", "AOE", "Buff"],
             "Description": "Current leader of Giants.",
             "Abilities": [
                 {
@@ -315,6 +315,10 @@
                 {
                     "Name": "Combined with Kai",
                     "Description": "When paired in a deck with Marrowkai, they train together. If the pair fall, Kai will continue to fight, while Sightless will limp back to the garrison. When Kai falls and retreats, he will limp back to garrison and retrain together with Sightless."
+                },
+                {
+                    "Name": "Giant Kinship",
+                    "Description": "All Giant Units have their training time reduced by 25%"
                 }
             ]
         },
@@ -327,7 +331,7 @@
             "Health": 275,
             "Damage": "25 | 35 vs Heavy Units",
             "DPS": 12.5,
-            "Traits": ["Ranged", "Light", "Medium Speed", "Single Target"],
+            "Traits": ["Ranged", "Light", "Bow man", "Medium Speed", "Single Target", "AOE", "Buff"],
             "Description": "Current leader of the Archidons.",
             "Abilities": [
                 {
@@ -362,7 +366,7 @@
             "Health": 500,
             "Damage": "25",
             "DPS": 25,
-            "Traits": ["Melee", "Light", "Slow Speed", "Single Target"],
+            "Traits": ["Melee", "Light", "Slow Speed", "Single Target", "Support", "Buff"],
             "Description": "Current King of the Order Empires, is the father of Kytchu, Xiphos, Shade, Icaron, Adicai and Atreyos.",
             "Abilities": [
                 {

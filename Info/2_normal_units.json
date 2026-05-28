@@ -101,7 +101,7 @@
         "Training time (seconds)": 15,
         "Damage": "10 | 15 vs Light Units",
         "DPS": 7.9,
-        "Traits": ["Melee","Spear man","Heavy","Medium Speed","Single Target"],
+        "Traits": ["Melee","Shield man","Spear","Heavy","Medium Speed","Single Target"],
         "Description": "A high Health, Heavy, Melee Unit of the Order that wields a powerful spear and sturdy shield.",
         "Abilities": [
             {
@@ -124,7 +124,7 @@
         "Training time (seconds)": 17,
         "Damage": "17",
         "DPS": 10.2,
-        "Traits": ["Melee","Skeleton","Spear man","Axe","Heavy","Slow Speed","Single Target"],
+        "Traits": ["Melee","Skeleton","Shield man","Axe","Heavy","Slow Speed","Single Target"],
         "Description": "A high Health, Heavy, Melee Unit of the Chaos Empire that wields an axe and shield.",
         "Abilities": [
             {
@@ -294,7 +294,7 @@
         "Training time (seconds)": 17,
         "Damage": "0",
         "DPS": 0,
-        "Traits": ["Healer","Slow Speed","Magic","Light","Single Target"],
+        "Traits": ["Healer","Slow Speed","Magic","Light","Single Target","Support"],
         "Description": "A low Health, Light, Magic Unit of the Order Empire. Uses spellcasting to healing allies.",
         "Abilities": [
             {
